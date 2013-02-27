@@ -1,1 +1,16 @@
 Software package to predict the outcomes of NHL games
+
+1. Make sure scores files are present
+   i.e. a local scores/ directory with the following files inside:
+   	2005-2006.scores, 2006-2007.scores, etc.
+
+2. Run database.py (only once)
+   - this will drop any previous database named hockey and create a new one
+   - a new table will be created for every .scores file (every season)
+   - 1900-1901 is a fake season for testing purposes (smaller dataset)
+   - for each table created, it will be populated with data from the
+     .scores files (open one and take a look)
+   - play around in the MySQL terminal after running database.py and see
+     what it created
+
+3. That is all so far...
