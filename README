@@ -13,4 +13,10 @@ Software package to predict the outcomes of NHL games
    - play around in the MySQL terminal after running database.py and see
      what it created
 
+##============================================================##
+## At this point the raw data has all been imported into the  ##
+## MySQL database database.py should not need to be run again ##
+## unless to start from a clean slate                         ##
+##============================================================##
+
 3. That is all so far...
