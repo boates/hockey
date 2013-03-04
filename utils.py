@@ -7,27 +7,28 @@ utility functions for hockey analysis
 and prediction package
 
 classes:
-    game()
+    Game()
+    Season()
 """
 
-class game():
+class Game():
     """
     Game object
     fields:
-        year
-        month
-        day
-        away
-        home
-        agoal
-        hgoal
-        result
+          year: int
+         month: int
+           day: int
+          away: string
+          home: string
+         agoal: int
+         hgoal: int
+        result: string
     methods:
         date()
     """
     def __init__(self, rec=None):
         """
-        Initialize game object (everything None
+        Initialize Game object (everything None
         if no record given at this time)
         """
         if rec:
@@ -77,6 +78,51 @@ class game():
         d += str(self.day)
         
         return d
+    
+    
+
+
+class Season():
+    """
+    Season object
+    fields:
+        team: string
+       games: list[Game]
+    methods:
+       nGames()
+       insert()
+    """
+    def __init__(self, team='None'):
+        """
+        Initialize Season object
+        """
+        self.team = team
+        self.games = []
+    
+        
+    def __repr__(self):
+        """
+        Print functionality
+        """
+        s  = 'team = '+str(self.team)+'; '
+        s += str(self.nGames())+' games\n'
+        for g in self.games:
+            s += g.__repr__() + '\n'
+        return s
+    
+    
+    def nGames(self):
+        """
+        return: number of games in season object
+        """
+        return len(self.games)
+    
+    
+    def insert(self, g):
+        """
+        insert game into season object
+        """
+        self.games.append(g)
     
     
 

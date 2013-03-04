@@ -10,7 +10,7 @@ table with its respective score data
 """
 import glob
 import MySQLdb as mdb
-from utils import game
+from utils import Game, Season
 
 def dbRemove(db='hockey'):
     """
@@ -121,20 +121,41 @@ def trainingTable(cur, table):
     pass
 
 
-def getTeamSeason(cur, team, table):
+def getTeamSeason(cur, team, table, loc='all'):
     """
     params:
-       cur: cursor to hockey database
-      team: string | 3-letter team abbreviation (e.g. 'DET')
-     table: string | season (e.g. '2005_2006')
+         cur: cursor to hockey database
+        team: string | 3-letter team abbreviation (e.g. 'DET')
+       table: string | season (e.g. '2005_2006')
+         loc: string | "all", "home", or "away" (default="all")
     """
     # retrieve the season for team
-    cur.execute("SELECT * FROM "+table+" WHERE away = '"+team+"' OR home = '"+team+"'")
+    if loc == 'all':
+        where = 'WHERE away = \"'+team+'\" OR home = \"'+team+'\"'
+    elif loc == 'home':
+        where = 'WHERE home = \"'+team+'\"'
+    elif loc == 'away':
+        where = 'WHERE away = \"'+team+'\"'
+    
+    # execute the MySQL selection
+    cur.execute('SELECT * FROM '+table+' '+where)
     fetch = cur.fetchall()
     
+    # create season object    
+    s = Season(team)
+    
+    # loop over all games from team's season
     for i, y, m, d, a, h, ag, hg, r in fetch:
-         g = game(rec=(y,m,d,a,h,ag,hg,r))
-         print g
+        
+        # create game object
+        g = Game( rec=(y,m,d,a,h,ag,hg,r) )
+        
+        # insert game into season
+        s.insert(g)
+        
+    print s
+        
+    return s
 
 
 def getAllScores():
