@@ -28,6 +28,7 @@ class Game():
         date()
         winner()
         loser()
+        dScore()
     """
     def __init__(self, rec=None):
         """
@@ -98,7 +99,23 @@ class Game():
         if   self.agoal > self.hgoal: return self.home
         elif self.hgoal > self.agoal: return self.away
     
-
+    
+    def dScore(self):
+        """
+        return: int | score differential for game
+                    | computed as ghome - gaway so that pos/neg
+                    | values correspond to home/away wins
+                    | return 0 if game went to SO
+        """
+        # return 0 in the case of a shootout
+        if self.result == 'SO':
+            return 0
+        
+        # otherwise, return goal differential
+        else:
+            return self.ghome - self.gaway
+    
+    
     
 class TeamSeason():
     """
@@ -285,8 +302,6 @@ class TeamSeason():
         """
         pass
         
-    
-    
     
 
 class Season():
