@@ -8,6 +8,7 @@ and prediction package
 
 classes:
     Game()
+    TeamSeason()
     Season()
 """
 
@@ -99,9 +100,9 @@ class Game():
     
 
     
-class Season():
+class TeamSeason():
     """
-    Season object
+    TeamSeason object
     fields:
        season: string
        team:   string
@@ -120,7 +121,7 @@ class Season():
     """
     def __init__(self, season='None', team='None'):
         """
-        Initialize Season object
+        Initialize TeamSeason object
         """
         self.season = season
         self.team = team
@@ -220,7 +221,49 @@ class Season():
         return len( self.OTGames(SO=SO) )
     
 
+
+class Season():
+    """
+    Season object
+    fields:
+       season: string
+          all: dict[string:TeamSeason]
+    methods:
+        insert()
+        teams()
+        getTeam(team)
+    """
+    def __init__(self, season='None'):
+        """
+        Initialize Season object
+        """
+        self.season = season
+        self.all = {}
     
+    
+    def insert(self, teamSeason):
+        """
+        Insert TeamSeason object into Season
+        """
+        self.all[teamSeason.team] = teamSeason
+    
+    
+    def teams(self):
+        """
+        return: list of teams present in Season
+        """
+        return sorted( self.all.keys() )
+    
+    
+    def getTeam(self, team):
+        """
+        return: TeamSeason | object for given team's season
+        """
+        return self.all[team]
+    
+    
+
+
 def main():
     pass
 

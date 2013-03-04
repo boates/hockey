@@ -6,7 +6,9 @@ Author: Brian Boates
 Main script for running hockey analysis
 """
 import MySQLdb as mdb
-from objects import Game, Season
+from objects import Game
+from objects import TeamSeason
+from objects import Season
 from database import *
 
 
@@ -20,7 +22,13 @@ def main():
     # get all available season names
     seasonNames = getSeasonNames(cur)
     
-    print seasonNames
+    # loop over all available seasons
+    allSeasons = []
+    for seasonName in seasonNames:
+        allSeasons.append( getSeason(cur, seasonName) )
+    
+
+    print allSeasons[0].getTeam('DET')
     
     
     # close cursor and connection to MySQL db

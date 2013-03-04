@@ -13,7 +13,9 @@ and season data.
 """
 import glob
 import MySQLdb as mdb
-from objects import Game, Season
+from objects import Game
+from objects import TeamSeason
+from objects import Season
 
 def dbRemove(db='hockey'):
     """
@@ -154,7 +156,7 @@ def getTeamSeason(cur, team, table, loc='all'):
     """
     Get all (or just home/away) games from team's season
     
-    return: Season object
+    return: TeamSeason object
     params:
          cur: cursor to hockey database
         team: string | 3-letter team abbreviation (e.g. 'DET')
@@ -173,8 +175,8 @@ def getTeamSeason(cur, team, table, loc='all'):
     cur.execute('SELECT * FROM '+table+' '+where)
     fetch = cur.fetchall()
     
-    # create season object    
-    s = Season(season=table, team=team)
+    # create TeamSeason object    
+    s = TeamSeason(season=table, team=team)
     
     # loop over all games from team's season
     for i, y, m, d, a, h, ag, hg, r in fetch:
@@ -188,26 +190,27 @@ def getTeamSeason(cur, team, table, loc='all'):
     return s
 
 
-def getAllSeasons(cur, table):
+def getSeason(cur, table):
     """
-    return: dict[team:Season]
+    return: Season | each team's 82 game TeamSeason
+                     for given table/season
     params:
           cur: cursor to hockey database
         table: string | season (e.g. '2005_2006')
     """
-    # initialize allSeasons dictionary
-    allSeasons = {}
+    # initialize Season object dictionary
+    allTeamSeasons = Season(table)
     
     # get list of teams for given season
     teams = getTeams(cur, table)
     
-    # get the Season for each team
+    # get the TeamSeason for each team
     for team in teams:
         
         # key = team, value = Season
-        allSeasons[team] = getTeamSeason(cur, team, table)
+        allTeamSeasons.insert( getTeamSeason(cur, team, table) )
     
-    return allSeasons
+    return allTeamSeasons
 
 
 def main():
