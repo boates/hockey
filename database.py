@@ -7,6 +7,9 @@ Take the YEAR-YEAR.scores files
 and create a table for each inside 
 a "hockey" database. Populate each 
 table with its respective score data
+
+Also includes methods to get team
+and season data.
 """
 import glob
 import MySQLdb as mdb
@@ -114,6 +117,22 @@ def dbPopulate(cur, table):
         cur.execute(command)
 
 
+def getSeasonNames(cur):
+    """
+    return: list[string] | list of all available seasons
+    params:
+        cur: cursor to the MySQL hockey database
+    """
+    # seasons are the table names
+    cur.execute('SHOW TABLES')
+    fetch = cur.fetchall()
+    
+    # loop through and append seasons
+    seasonNames = [s[0] for s in fetch if s[0] != '1900_1901']
+    
+    return seasonNames
+
+
 def getTeams(cur, table):
     """
     return: list[string] | list of team names for given season
@@ -126,9 +145,7 @@ def getTeams(cur, table):
     fetch = cur.fetchall()
     
     # loop through and append to teams list
-    teams = []
-    for team in fetch:
-        teams.append(team[0])
+    teams = [team[0] for team in fetch]
         
     return teams
 
