@@ -109,15 +109,8 @@ class TeamSeason():
        games:  list[Game]
     methods:
        insert()
-       nGames()
-       homeGames()
-       awayGames()
-       homeWins()
-       awayWins()
-       nhomeWins()
-       nawayWins()
-       OTGames(SO=True)
-       nOTGames(SO=True)
+       getGames(loc, result, before, after)
+       nGames(loc, result, before, after)
     """
     def __init__(self, season='None', team='None'):
         """
@@ -146,81 +139,155 @@ class TeamSeason():
         self.games.append(g)
     
         
-    def nGames(self):
+    def getGames(self, loc='all', result='all', before=None, after=None):
         """
-        return: number of games in season object
-        """
-        return len(self.games)
-    
-    
-    def homeGames(self):
-        """
-        return: list[Game] | list of home games
-        """
-        hGames = [g for g in self.games if self.home == g.home]
-        return hGames
-    
-    
-    def awayGames(self):
-        """
-        return: list[Game] | list of away games
-        """
-        aGames = [g for g in self.games if self.team == g.away]
-        return aGames
-    
-    
-    def homeWins(self):
-        """
-        return: list[Game] | list of home wins for team
-        """
-        hWins = [g for g in self.games if self.team == g.home == g.winner()]
-        return hWins
-    
-    
-    def awayWins(self):
-        """
-        return: list[Game] | list away wins for team
-        """
-        aWins = [g for g in self.games if self.team == g.away == g.winner()]
-        return aWins
-    
-    
-    def nhomeWins(self):
-        """
-        return: int | number of home wins for team
-        """
-        return len(self.homeWins)
-    
-    
-    def nawayWins(self):
-        """
-        return: int | number of away wins for team
-        """
-        return len(self.awayWins)
-    
-    
-    def OTGames(self, SO=True):
-        """
-        return: list[Game] | list of overtime games
+        return: list[Game] | list of games for team
+                             in TeamSeason
         params:
-            SO: bool | include SO games in list (default=True)
+              loc: string | 'all', 'home', or 'away'
+           result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+           before: string | cut-off date to consider games before
+                            (e.g. '2010-10-31')
+            after: string | cut-off date to consider games after
+                            (e.g. '2010-10-31')
         """
-        # retrieve all games that ended in OT (or possibly SO)
-        if SO:
-            return [g for g in self.games if g.result in ['OT','SO']]
-        else:
-            return [g for g in self.games if g.result == 'OT']
+        # loc can only be 'all', 'home' or 'away'
+        assert loc in ['all', 'home', 'away']
+        
+        # result can only be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO']
+        
+        # consider both home and away games
+        if loc == 'all':
+            
+            # consider all games between two dates
+            if before and after:
+                selection = [g for g in self.games if before < g.date() < after]
+            
+            # consider all games before given date
+            elif before:
+                selection = [g for g in self.games if g.date() < before]
+                
+            # consider all games after given date
+            elif after:
+                selection = [g for g in self.games if g.date() > after]
+                
+            # consider all games
+            else:
+                selection = self.games
+        
+        # consider only home games
+        elif loc == 'home':
+            
+            # select all home games
+            homeGames = [g for g in self.games if self.team == g.home]
+            
+            # consider home games between two dates
+            if before and after:
+                selection = [g for g in homeGames if before < g.date() < after]
+             
+            # consider only home games before given date
+            elif before:
+                selection = [g for g in homeGames if g.date() < date]
+            
+            # consider only home games after given date
+            elif after:
+                selection = [g for g in homeGames if g.date() > date]
+                
+            # consider all home games
+            else:
+                selection = homeGames
+                
+        # consider only away games
+        elif loc == 'away':
+            
+            # select all away games
+            awayGames = [g for g in self.games if self.team = g.away]
+            
+            # consider away games between two dates
+            if before and after:
+                selection = [g for g in awayGames if before < g.date() < after]
+            
+            # consider only away games before given date
+            if before:
+                selection = [g for g in awayGames if g.date() < date]
+            
+            # consider only away games after given date
+            if after:
+                selection = [g for g in awayGames if g.date() > date]
+                
+            # consider all away games
+            else: 
+                selection = awayGames
+        
+        #====================================#
+        # now have "selection" of games      #
+        # partitioned by dates and locations #
+        #====================================#
+        
+        # return all results from selection
+        if result == 'all':
+            return selection
+                        
+        # consider only wins from selection
+        elif result == 'wins':
+            return [g for g in selection if self.team == g.winner()]
+        
+        # consider only losses from selection
+        elif result == 'losses':
+            return [g for g in selection if self.team == g.loser()]
+        
+        # consider only games that ended in regulation from selection
+        elif result == 'R':
+            return [g for g in selection if g.result == 'R']
+        
+        # consider only games that ended not in regulation from selection
+        # i.e. all OT and SO games
+        elif result == 'notR':
+            return [g for g in selection if g.result != 'R']
+        
+        # consider only games that ended in OT from selection
+        elif result == 'OT':
+            return [g for g in selection if g.result == 'OT']
+            
+        # consider only games that ended in SO from selection
+        elif result == 'SO':
+            return [g for g in selection if g.result == 'SO']
     
-      
-    def nOTGames(self, SO=True):
+    
+    def nGames(self, loc='all', result='all' before=None, after=None):
         """
-        return: int | number of OT games ()
+        return: int | number of games in season object
+                      for location as all, home, or away
         params:
-            SO: bool | include SO games in sum (default=True)
+              loc: string | 'all', 'home', or 'away'
+           result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+           before: string | cut-off date to consider games before
+                            (e.g. '2010-10-31')
+            after: string | cut-off date to consider games before
+                            (e.g. '2010-10-31')
         """
-        return len( self.OTGames(SO=SO) )
+        # loc can only be 'all', 'home' or 'away'
+        assert loc in ['all', 'home', 'away']
+        
+        # retrieve appropriate selection of games
+        selection = self.getGames(loc=loc, result=result, before=before, after=after) )
+        
+        return len( selection )
+
+
     
 
+    def goalsFor(self, loc='all'):
+        """
+        Compute the total number of "goals for" for 
+        the team, given location as all, home, or away
+        """
+        pass
+        
+    
+    
+    
 
 class Season():
     """
