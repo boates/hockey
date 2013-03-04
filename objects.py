@@ -25,6 +25,8 @@ class Game():
         result: string
     methods:
         date()
+        winner()
+        loser()
     """
     def __init__(self, rec=None):
         """
@@ -86,17 +88,34 @@ class Game():
         """
         if   self.agoal > self.hgoal: return self.away
         elif self.hgoal > self.agoal: return self.home
-
-
+    
+    
+    def loser(self):
+        """
+        return: string | losing team name
+        """
+        if   self.agoal > self.hgoal: return self.home
+        elif self.hgoal > self.agoal: return self.away
+    
+    
+    
 class Season():
     """
     Season object
     fields:
-        team: string
+       team:  string
        games: list[Game]
     methods:
-       nGames()
        insert()
+       nGames()
+       homeGames()
+       awayGames()
+       homeWins()
+       awayWins()
+       nhomeWins()
+       nawayWins()
+       OTGames(SO=True)
+       nOTGames(SO=True)
     """
     def __init__(self, team='None'):
         """
@@ -117,6 +136,13 @@ class Season():
         return s
     
     
+    def insert(self, g):
+        """
+        insert game into season object
+        """
+        self.games.append(g)
+    
+        
     def nGames(self):
         """
         return: number of games in season object
@@ -124,42 +150,76 @@ class Season():
         return len(self.games)
     
     
-    def insert(self, g):
+    def homeGames(self):
         """
-        insert game into season object
+        return: list[Game] | list of home games
         """
-        self.games.append(g)
+        hGames = [g for g in self.games if self.home == g.home]
+        return hGames
+    
+    
+    def awayGames(self):
+        """
+        return: list[Game] | list of away games
+        """
+        aGames = [g for g in self.games if self.team == g.away]
+        return aGames
     
     
     def homeWins(self):
         """
-        return: int | number of home wins for team
+        return: list[Game] | list of home wins for team
         """
-        hWins = [g for g in self.games if g.winner == g.home == self.team]
-        print hWins
-        return len(hWins)
+        hWins = [g for g in self.games if self.team == g.home == g.winner()]
+        return hWins
+    
     
     def awayWins(self):
         """
+        return: list[Game] | list away wins for team
+        """
+        aWins = [g for g in self.games if self.team == g.away == g.winner()]
+        return aWins
+    
+    
+    def nhomeWins(self):
+        """
+        return: int | number of home wins for team
+        """
+        return len(self.homeWins)
+    
+    
+    def nawayWins(self):
+        """
         return: int | number of away wins for team
         """
-        pass
+        return len(self.awayWins)
     
-    def nOT(self, SO=True):
+    
+    def OTGames(self, SO=True):
+        """
+        return: list[Game] | list of overtime games
+        params:
+            SO: bool | include SO games in list (default=True)
+        """
+        # retrieve all games that ended in OT (or possibly SO)
+        if SO:
+            return [g for g in self.games if g.result in ['OT','SO']]
+        else:
+            return [g for g in self.games if g.result == 'OT']
+    
+      
+    def nOTGames(self, SO=True):
         """
         return: int | number of OT games ()
         params:
             SO: bool | include SO games in sum (default=True)
         """
-        # retrieve all games that ended in OT (or possibly SO)
-        if SO:
-            OT = [g for g in self.games if g.results in ['OT','SO']]
-        else:
-            OT = [g for g in self.games if g.results == 'OT']
-            
-        return len(OT)
+        return len( self.OTGames(SO=SO) )
+    
+    
 
-        
+    
 def main():
     pass
 

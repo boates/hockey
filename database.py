@@ -10,7 +10,7 @@ table with its respective score data
 """
 import glob
 import MySQLdb as mdb
-from utils import Game, Season
+from objects import Game, Season
 
 def dbRemove(db='hockey'):
     """
@@ -178,8 +178,11 @@ def main():
     # create cursor for MySQL
     cur = con.cursor()
     
-    s = getTeamSeason(cur=cur, team='DET', table='2008_2009')
+    s = getTeamSeason(cur=cur, team='MTL', table='1900_1901')
     print s
+    print s.homeWins()
+    print s.awayWins()
+    print s.nOTGames(SO=True)
     
     # close cursor to skillrank database
     if cur: cur.close()
