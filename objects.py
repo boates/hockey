@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-utils.py
+objects.py
 Author: Brian Boates
 
-utility functions for hockey analysis
+objects for hockey analysis
 and prediction package
 
 classes:
@@ -103,8 +103,9 @@ class Season():
     """
     Season object
     fields:
-       team:  string
-       games: list[Game]
+       season: string
+       team:   string
+       games:  list[Game]
     methods:
        insert()
        nGames()
@@ -117,10 +118,11 @@ class Season():
        OTGames(SO=True)
        nOTGames(SO=True)
     """
-    def __init__(self, team='None'):
+    def __init__(self, season='None', team='None'):
         """
         Initialize Season object
         """
+        self.season = season
         self.team = team
         self.games = []
     

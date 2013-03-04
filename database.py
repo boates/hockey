@@ -157,7 +157,7 @@ def getTeamSeason(cur, team, table, loc='all'):
     fetch = cur.fetchall()
     
     # create season object    
-    s = Season(team)
+    s = Season(season=table, team=team)
     
     # loop over all games from team's season
     for i, y, m, d, a, h, ag, hg, r in fetch:
@@ -216,7 +216,7 @@ def main():
     print
     print
     d = getAllSeasons(cur, '2010_2011')
-    print d['TOR']
+    print d['DET']
     
     # close cursor and connection to MySQL db
     if cur: cur.close()
