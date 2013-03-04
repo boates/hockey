@@ -22,13 +22,11 @@ def main():
     # get all available season names
     seasonNames = getSeasonNames(cur)
     
-    # loop over all available seasons
-    allSeasons = []
-    for seasonName in seasonNames:
-        allSeasons.append( getSeason(cur, seasonName) )
+    # create list of all seasons
+    allSeasons = [getSeason(cur, seasonName) for seasonName in seasonNames]
     
-
     print allSeasons[0].getTeam('DET')
+    print allSeasons[0].season
     
     
     # close cursor and connection to MySQL db

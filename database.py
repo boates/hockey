@@ -220,27 +220,7 @@ def main():
     """
 #    dbRemove(db='hockey')
 #    dbCreate(db='hockey')
-
-    # connect to MySQL db and get cursor
-    con = mdb.connect(host='localhost', db='hockey', user='root')
-    cur = con.cursor()
-    
-    s = getTeamSeason(cur=cur, team='MTL', table='1900_1901')
-    print s
-    print s.homeWins()
-    print s.awayWins()
-    print s.nOTGames(SO=True)
-    print
-    teams = getTeams(cur, '2010_2011')
-    print teams, len(teams)
-    print
-    print
-    d = getAllSeasons(cur, '2010_2011')
-    print d['DET']
-    
-    # close cursor and connection to MySQL db
-    if cur: cur.close()
-    if con: con.close()
+    pass
 
 
 if __name__ == '__main__':
