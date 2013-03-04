@@ -97,7 +97,7 @@ class Game():
         if   self.agoal > self.hgoal: return self.home
         elif self.hgoal > self.agoal: return self.away
     
-    
+
     
 class Season():
     """
@@ -217,12 +217,10 @@ class Season():
         """
         return len( self.OTGames(SO=SO) )
     
-    
 
     
 def main():
     pass
-
 
 
 if __name__ == '__main__':

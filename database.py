@@ -114,6 +114,25 @@ def dbPopulate(cur, table):
         cur.execute(command)
 
 
+def getTeams(cur, table):
+    """
+    return: list[string] | list of team names for given season
+    params:
+          cur: cursor to the MySQL hockey database
+        table: string | the name of the database table
+    """
+    # grab alphabetized list of distinct home teams (all teams once)
+    cur.execute('SELECT DISTINCT(home) FROM '+table+' ORDER BY home')
+    fetch = cur.fetchall()
+    
+    # loop through and append to teams list
+    teams = []
+    for team in fetch:
+        teams.append(team[0])
+        
+    return teams
+
+
 def getTeamSeason(cur, team, table, loc='all'):
     """
     Get all (or just home/away) games from team's season
@@ -152,17 +171,26 @@ def getTeamSeason(cur, team, table, loc='all'):
     return s
 
 
-def getAllScores():
+def getAllSeasons(cur, table):
     """
-    return: 
+    return: dict[team:Season]
     params:
-        var:
+          cur: cursor to hockey database
+        table: string | season (e.g. '2005_2006')
     """
-    pass
+    # initialize allSeasons dictionary
+    allSeasons = {}
     
+    # get list of teams for given season
+    teams = getTeams(cur, table)
     
+    # get the Season for each team
+    for team in teams:
+        
+        # key = team, value = Season
+        allSeasons[team] = getTeamSeason(cur, team, table)
     
-    
+    return allSeasons
 
 
 def main():
@@ -172,10 +200,9 @@ def main():
     """
 #    dbRemove(db='hockey')
 #    dbCreate(db='hockey')
-    # connect to MySQL
+
+    # connect to MySQL db and get cursor
     con = mdb.connect(host='localhost', db='hockey', user='root')
-    
-    # create cursor for MySQL
     cur = con.cursor()
     
     s = getTeamSeason(cur=cur, team='MTL', table='1900_1901')
@@ -183,11 +210,16 @@ def main():
     print s.homeWins()
     print s.awayWins()
     print s.nOTGames(SO=True)
+    print
+    teams = getTeams(cur, '2010_2011')
+    print teams, len(teams)
+    print
+    print
+    d = getAllSeasons(cur, '2010_2011')
+    print d['TOR']
     
-    # close cursor to skillrank database
+    # close cursor and connection to MySQL db
     if cur: cur.close()
-    
-    # close connection to skillrank database
     if con: con.close()
 
 
