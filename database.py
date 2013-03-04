@@ -10,6 +10,7 @@ table with its respective score data
 """
 import glob
 import MySQLdb as mdb
+from utils import game
 
 def dbRemove(db='hockey'):
     """
@@ -113,13 +114,62 @@ def dbPopulate(cur, table):
         cur.execute(command)
 
 
+def trainingTable(cur, table):
+    """
+    create MySQL table for training data
+    """
+    pass
+
+
+def getTeamSeason(cur, team, table):
+    """
+    params:
+       cur: cursor to hockey database
+      team: string | 3-letter team abbreviation (e.g. 'DET')
+     table: string | season (e.g. '2005_2006')
+    """
+    # retrieve the season for team
+    cur.execute("SELECT * FROM "+table+" WHERE away = '"+team+"' OR home = '"+team+"'")
+    fetch = cur.fetchall()
+    
+    for i, y, m, d, a, h, ag, hg, r in fetch:
+         g = game(rec=(y,m,d,a,h,ag,hg,r))
+         print g
+
+
+def getAllScores():
+    """
+    return: 
+    params:
+        var:
+    """
+    pass
+    
+    
+    
+    
+
+
 def main():
     """
     remove hockey database and create from scratch
     requires local scores/ directory with .scores files
     """
-    dbRemove(db='hockey')
-    dbCreate(db='hockey')
+#    dbRemove(db='hockey')
+#    dbCreate(db='hockey')
+    # connect to MySQL
+    con = mdb.connect(host='localhost', db='hockey', user='root')
+    
+    # create cursor for MySQL
+    cur = con.cursor()
+    
+    getTeamSeason(cur=cur, team='DET', table='2008_2009')
+    
+    # close cursor to skillrank database
+    if cur: cur.close()
+    
+    # close connection to skillrank database
+    if con: con.close()
 
 
 if __name__ == '__main__':
