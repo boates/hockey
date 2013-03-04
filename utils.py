@@ -80,6 +80,12 @@ class Game():
         return d
     
     
+    def winner(self):
+        """
+        return: string | winning team name
+        """
+        if   self.agoal > self.hgoal: return self.away
+        elif self.hgoal > self.agoal: return self.home
 
 
 class Season():
@@ -125,6 +131,33 @@ class Season():
         self.games.append(g)
     
     
+    def homeWins(self):
+        """
+        return: int | number of home wins for team
+        """
+        hWins = [g for g in self.games if g.winner == g.home == self.team]
+        print hWins
+        return len(hWins)
+    
+    def awayWins(self):
+        """
+        return: int | number of away wins for team
+        """
+        pass
+    
+    def nOT(self, SO=True):
+        """
+        return: int | number of OT games ()
+        params:
+            SO: bool | include SO games in sum (default=True)
+        """
+        # retrieve all games that ended in OT (or possibly SO)
+        if SO:
+            OT = [g for g in self.games if g.results in ['OT','SO']]
+        else:
+            OT = [g for g in self.games if g.results == 'OT']
+            
+        return len(OT)
 
         
 def main():

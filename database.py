@@ -114,22 +114,18 @@ def dbPopulate(cur, table):
         cur.execute(command)
 
 
-def trainingTable(cur, table):
-    """
-    create MySQL table for training data
-    """
-    pass
-
-
 def getTeamSeason(cur, team, table, loc='all'):
     """
+    Get all (or just home/away) games from team's season
+    
+    return: Season object
     params:
          cur: cursor to hockey database
         team: string | 3-letter team abbreviation (e.g. 'DET')
        table: string | season (e.g. '2005_2006')
          loc: string | "all", "home", or "away" (default="all")
     """
-    # retrieve the season for team
+    # home, away, or all games from season for team
     if loc == 'all':
         where = 'WHERE away = \"'+team+'\" OR home = \"'+team+'\"'
     elif loc == 'home':
@@ -137,7 +133,7 @@ def getTeamSeason(cur, team, table, loc='all'):
     elif loc == 'away':
         where = 'WHERE away = \"'+team+'\"'
     
-    # execute the MySQL selection
+    # select the season for team
     cur.execute('SELECT * FROM '+table+' '+where)
     fetch = cur.fetchall()
     
@@ -152,8 +148,6 @@ def getTeamSeason(cur, team, table, loc='all'):
         
         # insert game into season
         s.insert(g)
-        
-    print s
         
     return s
 
@@ -184,7 +178,8 @@ def main():
     # create cursor for MySQL
     cur = con.cursor()
     
-    getTeamSeason(cur=cur, team='DET', table='2008_2009')
+    s = getTeamSeason(cur=cur, team='DET', table='2008_2009')
+    print s
     
     # close cursor to skillrank database
     if cur: cur.close()
