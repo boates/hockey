@@ -28,6 +28,8 @@ class Game():
         date()
         winner()
         loser()
+        goalsFor(team)
+        goalsAgainst(team)
         dScore()
     """
     def __init__(self, rec=None):
@@ -156,6 +158,23 @@ class Game():
             return self.ghome - self.gaway
     
     
+    def numericalResult(self):
+        """
+        return: int | a number version of the game result
+                    |   0: home win / away loss (including OT)
+                    |   1: away win / home loss (including OT)
+                    |   2: SO
+        """
+        # reutnr 2 for SO
+        if   self.result == 'SO': return 2
+        
+        # return 0 for non-SO home win
+        elif self.home == self.winner(): return 0
+        
+        # return 1 for non-SO away win
+        elif self.away == self.winner(): return 1
+    
+
 
 
 class TeamSeason():
@@ -169,6 +188,7 @@ class TeamSeason():
        insert()
        getGames(loc, result, before, after)
        nGames(loc, result, before, after)
+       getGoalsLists(N, loc, result, before)
     """
     def __init__(self, season='None', team='None'):
         """
@@ -336,7 +356,7 @@ class TeamSeason():
 
     
 
-    def getGoalsList(self, N, loc='all', result='all', before=None):
+    def getGoalsLists(self, N, loc='all', result='all', before=None):
         """
         Compute the total number of "goals for" for 
         the team, given location as all, home, or away
