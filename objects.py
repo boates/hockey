@@ -100,6 +100,46 @@ class Game():
         elif self.hgoal > self.agoal: return self.away
     
     
+    def goalsFor(self, team):
+        """
+        return: int | number of goals for given team
+                      does NOT include SO goals
+        params:
+            team: string | 3-character team name
+        """
+        # team must be one of two teams in Game
+        assert team in [self.home, self.away], 'team='+team
+        
+        # SO edge case, SO goals do not count
+        if self.result == 'SO': return min(self.hgoal, self.agoal)
+        
+        # if given team was the home team
+        elif team = self.home: return self.hgoal
+            
+        # if the given team was the away team
+        elif team = self.away: return self.agoal
+    
+        
+    def goalsAgainst(self, team):
+        """
+        return: int | number of goals against given team
+                      does NOT include SO goals
+        params:
+            team: string | 3-character team name
+        """
+        # team must be one of two teams in Game
+        assert team in [self.home, self.away], 'team='+team
+        
+        # SO edge case, SO goals do not count
+        if self.result == 'SO': return min(self.hgoal, self.agoal)
+        
+        # if given team was the home team
+        elif team = self.home: return self.agoal
+            
+        # if the given team was the away team
+        elif team = self.away: return self.hgoal
+    
+        
     def dScore(self):
         """
         return: int | score differential for game
@@ -116,7 +156,8 @@ class Game():
             return self.ghome - self.gaway
     
     
-    
+
+
 class TeamSeason():
     """
     TeamSeason object
@@ -169,10 +210,10 @@ class TeamSeason():
                             (e.g. '2010-10-31')
         """
         # loc can only be 'all', 'home' or 'away'
-        assert loc in ['all', 'home', 'away']
+        assert loc in ['all', 'home', 'away'], 'loc='+loc
         
         # result can only be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
-        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO']
+        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+result
         
         # consider both home and away games
         if loc == 'all':
@@ -285,7 +326,7 @@ class TeamSeason():
                             (e.g. '2010-10-31')
         """
         # loc can only be 'all', 'home' or 'away'
-        assert loc in ['all', 'home', 'away']
+        assert loc in ['all', 'home', 'away'], 'loc='+loc
         
         # retrieve appropriate selection of games
         selection = self.getGames(loc=loc, result=result, before=before, after=after) )
@@ -295,14 +336,45 @@ class TeamSeason():
 
     
 
-    def goalsFor(self, loc='all'):
+    def getGoalsList(self, N, loc='all', result='all', before=None):
         """
         Compute the total number of "goals for" for 
         the team, given location as all, home, or away
-        """
-        pass
         
+        return: goalsForList, goalsAgainstList | list[int], list[int]
+                ---> total goals for/against for date and result selection
+        params:
+                N: int    | number of previous games to consider for total
+                            if N > current games in season, return -1
+              loc: string | 'all', 'home', or 'away' (default='all')
+           result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+           before: string | date string e.g. '2010-01-31'
+        """
+        # loc can only be 'all', 'home' or 'away'
+        assert loc in ['all', 'home', 'away'], 'loc='+loc
+        
+        # result can only be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+result
+
+        # get all games with given location and result before given date
+        games = self.getGames(loc=loc, result=result, before=before)
+        
+        # get goals for and goals against lists
+        goalsForList     = [g.goalsFor(self.team)     for g in games]
+        goalsAgainstList = [g.goalsAgainst(self.team) for g in games]
+        
+        # check to see if enough data for N
+        if len(goalsForList) < N:
+            # if not, return empty lists
+            return [], []
+        
+        # otherwise there are engouh games
+        else:
+            # return the previous N games
+            return goalsForList[-N:], goalsAgainstList[-N:]
     
+
+
 
 class Season():
     """
