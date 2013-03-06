@@ -501,6 +501,7 @@ class Season():
         getTeam(team)
         getProjections(N, loc, result, scheme)
         getStreaks(loc, result)
+        allGames()
     """
     def __init__(self, season='None'):
         """
@@ -674,6 +675,38 @@ class Season():
                     gOpp = self.getTeam(g.home).gameOnDate(g.date())
                     gOpp.insertStreak(streak, loc='away')
     
+    
+    def allGames(self, featureList=[]):
+        """
+        return: chronological list of all games
+        params:
+            featureList: list[string] | list of feature names
+        """
+        # initialize list to hold all games
+        gameList = []
+        
+        # loop over all teams in season
+        for team in self.teams():
+            
+            # get TeamSeason for team
+            tS = self.getTeam(team)
+            
+            # if specific features requested
+            if featureList:
+                # consider only home games to avoid duplicates
+                gList = tS.getGames(loc='home')
+                # append only games with all features
+                gameList += [g for g in gList if sorted(g.features) == sorted(featureList)]
+            
+            # if features not specified
+            else:
+                # only append team's home games (avoids duplicates)
+                gameList += tS.getGames(loc='home')
+            
+        # sort the gameList by date
+        gameList = sorted(gameList, key=Game.date)
+            
+        return gameList
     
 
 
