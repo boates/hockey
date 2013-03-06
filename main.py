@@ -20,18 +20,17 @@ def main():
     # get all available season names
     seasonNames = getSeasonNames(cur)
     
-    seasonNames = [seasonNames[0]]
-    
     # loop over all seasons
-    for seasonName in seasonNames:
+#    for seasonName in seasonNames:
+    for seasonName in seasonNames[-1:]:
         
         # get Season for seasonName
         S = getSeason(cur, seasonName)
         
         # compute projections for games in season
-        S.getProjections(N=5, loc='all', result='all', scheme='constant')
+        S.getProjections(N=1, loc='home', result='all', scheme='constant')
         
-#    print S.getTeam('DET')
+    print S.getTeam('DET')
         
     # close cursor and connection to MySQL db
     if cur: cur.close()

@@ -303,11 +303,11 @@ class TeamSeason():
              
             # consider only home games before given date
             elif before:
-                selection = [g for g in homeGames if g.date() < date]
+                selection = [g for g in homeGames if g.date() < before]
             
             # consider only home games after given date
             elif after:
-                selection = [g for g in homeGames if g.date() > date]
+                selection = [g for g in homeGames if g.date() > after]
                 
             # consider all home games
             else:
@@ -325,11 +325,11 @@ class TeamSeason():
             
             # consider only away games before given date
             if before:
-                selection = [g for g in awayGames if g.date() < date]
+                selection = [g for g in awayGames if g.date() < before]
             
             # consider only away games after given date
             if after:
-                selection = [g for g in awayGames if g.date() > date]
+                selection = [g for g in awayGames if g.date() > after]
                 
             # consider all away games
             else: 
@@ -503,7 +503,7 @@ class Season():
             # get TeamSeason object
             tS = self.all[team]
             
-            # get selection of only home games (avoid double counting)
+            # get selection of only all games (prone to double counting)
             games = tS.getGames(loc='all', result=result)
             
             # loop over team's games
