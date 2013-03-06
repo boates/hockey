@@ -30,17 +30,14 @@ def main():
         # compute projections for games in season
         S.getProjections(N=5, loc='all', result='all', scheme='constant')
         
+        # compute streaks for all teams' games
+        S.getStreaks(loc='all', result='all')
+    
+        
     ts = S.getTeam('DET')
     
     for g in ts.getGames():
-        print '--------------'
-#        print g
-        
-        print S.getTeam(g.home).gameOnDate(g.date())
-        print S.getTeam(g.away).gameOnDate(g.date())
-        
-#        S.getTeam(g.home).getGoalsLists(N=5, loc='all', result=result, before=date)
-#        print g.features
+        print g
         
     # close cursor and connection to MySQL db
     if cur: cur.close()

@@ -37,3 +37,22 @@ def getWeights(N, scheme='constant'):
     return weights
 
 
+def scaleFeature(f):
+    """
+    Feature scaling for individual features
+    by subtracting mean and dividing by range
+    
+    return: list[float] | scaled feature
+    params:
+            list[float] | feature to be scaled
+    """
+    # compute the mean
+    m = sum(f) / float(len(f))
+    
+    # get the max-min distance
+    d = float(max(f) - min(f))
+    
+    # scale the feature
+    scaledFeature = [(x-m)/d for x in f]
+    
+    return scaledFeature

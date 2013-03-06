@@ -34,6 +34,7 @@ class Game():
         dScore()
         numericalResult()
         insertProjections(hGF, hGA, aGF, aGA, pdScore)
+        insertStreak(streak, loc)
     """
     def __init__(self, rec=None):
         """
@@ -70,17 +71,26 @@ class Game():
         s += str(self.agoal) + ' '
         s += str(self.hgoal) + ' '
         s += str(self.dScore()) + ' '
-        s += self.result
+        s += self.result     + ' '
         
         # include projections if available
         try:
             tmp = self.pdScore
-            s += '; p='
+            s += '| dp='
 #            s += str(self.phGF) + ' '
 #            s += str(self.phGA) + ' '
 #            s += str(self.paGF) + ' '
 #            s += str(self.paGA) + ' '
-            s += str(self.pdScore)
+            s += str(self.pdScore) + ' '
+        except AttributeError:
+            pass
+        
+        # include streaks if available
+        try:
+            a, b = self.hstreak, self.astreak
+            s += '| st='
+            s += str(self.astreak) + ' '
+            s += str(self.hstreak)
         except AttributeError:
             pass
         
@@ -217,7 +227,31 @@ class Game():
         # add projected score differntial to features dict
         self.features['pdScore'] = pdScore
     
+    
+    def insertStreak(self, streak, loc):
+        """
+        Insert streaks for home or away team
+        coming into Game
         
+        params:
+            streak: int    | streak (pos=winning, neg=losing)
+               loc: string | 'home' or 'away'
+        """
+        # location must be either 'home' or 'away'
+        assert loc in ['home', 'away'], 'loc='+str(loc)
+        
+        # insert the streak
+        if   loc == 'home': self.hstreak = streak
+        elif loc == 'away': self.astreak = streak
+        
+        # if both home and away streaks are available
+        # put the difference into the features dict
+        try:
+            self.features['dStreak'] = self.hstreak - self.astreak
+        except AttributeError:
+            pass
+    
+    
 
 
 class TeamSeason():
@@ -466,6 +500,7 @@ class Season():
         teams()
         getTeam(team)
         getProjections(N, loc, result, scheme)
+        getStreaks(loc, result)
     """
     def __init__(self, season='None'):
         """
@@ -526,7 +561,7 @@ class Season():
         for team in self.teams():
             
             # get TeamSeason object
-            tS = self.all[team]
+            tS = self.getTeam(team)
             
             # get selection of only all games (prone to double counting)
             games = tS.getGames(loc='all', result=result)
@@ -541,7 +576,7 @@ class Season():
                 if team == g.home:
                     
                     # get opponent's TeamSeason
-                    tSopp = self.all[g.away]
+                    tSopp = self.getTeam(g.away)
                     
                     # get goals lists for home and away teams
                     phGFlist, phGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
@@ -551,7 +586,7 @@ class Season():
                 if team == g.away:
                     
                     # get opponent's TeamSeason
-                    tSopp = self.all[g.home]
+                    tSopp = self.getTeam(g.home)
                     
                     # get goals lists for home and away teams
                     paGFlist, paGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
@@ -579,3 +614,70 @@ class Season():
                     g.insertProjections(phGF, phGA, paGF, paGA, pdScore)
     
     
+    def getStreaks(self, loc='all', result='all'):
+        """
+        params:
+           loc: string | location of games to include in projections
+                         'all', 'home', or 'away' (default='all')
+        result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+        """
+        # loop over all teams in season
+        for team in self.teams():
+            
+            # get current TeamSeason
+            tS = self.getTeam(team)
+            
+            # get all prior games for team
+            games = tS.getGames(loc=loc, result=result)
+            
+            # loop through team's games
+            for i, g in enumerate(games):
+                
+                # initialize streak
+                streak = 0
+                
+                # if first game, team has no streak
+                if i == 0: streak = 0
+                
+                else:
+                    # if team won its last game
+                    if team == games[i-1].winner():
+                        # loop over previous game outcomes until team didn't win
+                        k = 1
+                        while team == games[i-k].winner() and i-k > 0:
+                            streak += 1
+                            k += 1
+                    
+                    # if team lost its last game
+                    elif team == games[i-1].loser():
+                        # loop over previous game outcomes until team didn't lose
+                        k = 1
+                        while team == games[i-k].loser() and i-k > 0:
+                            streak += -1
+                            k += 1
+                
+                #### INSERT STREAK INTO Game OBJECTS ####
+                
+                if team == g.home:
+                    # insert streak into Game
+                    g.insertStreak(streak, loc='home')                    
+                    # also insert into the copy of the game 
+                    # in the opponent's TeamSeason
+                    gOpp = self.getTeam(g.away).gameOnDate(g.date())
+                    gOpp.insertStreak(streak, loc='home')
+                    
+                elif team == g.away:
+                    # insert streak into Game
+                    g.insertStreak(streak, loc='away')
+                    # also insert into the copy of the game 
+                    # in the opponent's TeamSeason
+                    gOpp = self.getTeam(g.home).gameOnDate(g.date())
+                    gOpp.insertStreak(streak, loc='away')
+    
+    
+
+
+
+
+
+
