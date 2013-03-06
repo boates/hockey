@@ -15,10 +15,10 @@ def getWeights(N, scheme='constant'):
                         options are 'constant' or 'linear'
     """
     # make sure N is valid
-    assert N > 1, 'N must be greater than 1'
+    assert N >= 1, 'N must be >= 1; N='+str(N)
     
     # make sure scale is valid
-    assert scheme in ['constant', 'linear'], 'scale='+scale
+    assert scheme in ['constant', 'linear'], 'scale='+str(scale)
     
     # constant weighting
     if scheme == 'constant':
@@ -37,6 +37,3 @@ def getWeights(N, scheme='constant'):
     return weights
 
 
-
-if __name__ == '__main__':
-    main()

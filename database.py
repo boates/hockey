@@ -163,6 +163,9 @@ def getTeamSeason(cur, team, table, loc='all'):
        table: string | season (e.g. '2005_2006')
          loc: string | "all", "home", or "away" (default="all")
     """
+    # loc can only be 'all', 'home' or 'away'
+    assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
+    
     # home, away, or all games from season for team
     if loc == 'all':
         where = 'WHERE away = \"'+team+'\" OR home = \"'+team+'\"'

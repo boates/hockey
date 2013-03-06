@@ -49,6 +49,10 @@ class Game():
             self.agoal  = int(rec[5])
             self.hgoal  = int(rec[6])
             self.result = str(rec[7])
+            
+            #======= projections
+            # self.phGF, self.phGA, self.paGF, self.paGA, self.pdScore
+            #======= to be created later
         else:
             s = 'Must provide record when initializting game object'
             raise AttributeError(s)
@@ -65,6 +69,18 @@ class Game():
         s += str(self.agoal) + ' '
         s += str(self.hgoal) + ' '
         s += self.result
+        
+        # include projections if available
+        try:
+            tmp = self.phGF
+            s += '; p= '
+            s += str(self.phGF) + ' '
+            s += str(self.phGA) + ' '
+            s += str(self.paGF) + ' '
+            s += str(self.paGA) + ' '
+            s += str(self.pdScore)
+        except AttributeError:
+            pass
         
         return s
     
@@ -113,16 +129,16 @@ class Game():
             team: string | 3-character team name
         """
         # team must be one of two teams in Game
-        assert team in [self.home, self.away], 'team='+team
+        assert team in [self.home, self.away], 'team='+str(team)
         
         # SO edge case, SO goals do not count
         if self.result == 'SO': return min(self.hgoal, self.agoal)
         
         # if given team was the home team
-        elif team = self.home: return self.hgoal
+        elif team == self.home: return self.hgoal
             
         # if the given team was the away team
-        elif team = self.away: return self.agoal
+        elif team == self.away: return self.agoal
     
         
     def goalsAgainst(self, team):
@@ -133,16 +149,16 @@ class Game():
             team: string | 3-character team name
         """
         # team must be one of two teams in Game
-        assert team in [self.home, self.away], 'team='+team
+        assert team in [self.home, self.away], 'team='+str(team)
         
         # SO edge case, SO goals do not count
         if self.result == 'SO': return min(self.hgoal, self.agoal)
         
         # if given team was the home team
-        elif team = self.home: return self.agoal
+        elif team == self.home: return self.agoal
             
         # if the given team was the away team
-        elif team = self.away: return self.hgoal
+        elif team == self.away: return self.hgoal
     
         
     def dScore(self):
@@ -178,18 +194,24 @@ class Game():
         elif self.away == self.winner(): return 1
     
     
-    def insertProjections(self, hGF, hGA, aGF, aGA, pdScore):
+    def insertProjections(self, phGF, phGA, paGF, paGA, pdScore):
         """
         Insert projected scores into Game
         
         params:
-              hGF: float | projected GF for home team
-              hGA: float | projected GA for home team
-              aGF: float | projected GF for away team
-              aGA: float | projected GA for away team
+             phGF: float | projected GF for home team
+             phGA: float | projected GA for home team
+             paGF: float | projected GF for away team
+             paGA: float | projected GA for away team
           pdScore: float | projected score differential
         """
-        pass
+        # set member variables
+        self.phGF    = phGF
+        self.phGA    = phGA
+        self.paGF    = paGF
+        self.paGA    = paGA
+        self.pdScore = pdScore
+    
 
 
 class TeamSeason():
@@ -245,10 +267,10 @@ class TeamSeason():
                             (e.g. '2010-10-31')
         """
         # loc can only be 'all', 'home' or 'away'
-        assert loc in ['all', 'home', 'away'], 'loc='+loc
+        assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
         
         # result can only be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
-        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+result
+        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+str(result)
         
         # consider both home and away games
         if loc == 'all':
@@ -295,7 +317,7 @@ class TeamSeason():
         elif loc == 'away':
             
             # select all away games
-            awayGames = [g for g in self.games if self.team = g.away]
+            awayGames = [g for g in self.games if self.team == g.away]
             
             # consider away games between two dates
             if before and after:
@@ -348,7 +370,7 @@ class TeamSeason():
             return [g for g in selection if g.result == 'SO']
     
     
-    def nGames(self, loc='all', result='all' before=None, after=None):
+    def nGames(self, loc='all', result='all', before=None, after=None):
         """
         return: int | number of games in season object
                       for location as all, home, or away
@@ -361,10 +383,10 @@ class TeamSeason():
                             (e.g. '2010-10-31')
         """
         # loc can only be 'all', 'home' or 'away'
-        assert loc in ['all', 'home', 'away'], 'loc='+loc
+        assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
         
         # retrieve appropriate selection of games
-        selection = self.getGames(loc=loc, result=result, before=before, after=after) )
+        selection = self.getGames(loc=loc, result=result, before=before, after=after)
         
         return len( selection )
     
@@ -384,11 +406,11 @@ class TeamSeason():
            before: string | date string e.g. '2010-01-31'
         """
         # loc can only be 'all', 'home' or 'away'
-        assert loc in ['all', 'home', 'away'], 'loc='+loc
+        assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
         
         # result can only be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
-        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+result
-
+        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+str(result)
+        
         # get all games with given location and result before given date
         games = self.getGames(loc=loc, result=result, before=before)
         
@@ -406,10 +428,6 @@ class TeamSeason():
             # return the previous N games
             return goalsForList[-N:], goalsAgainstList[-N:]
     
-    
-    
-    
-
 
 
 class Season():
@@ -419,7 +437,7 @@ class Season():
        season: string
           all: dict[string:TeamSeason]
     methods:
-        insert()
+        insert(teamSeason)
         teams()
         getTeam(team)
         getProjections(N, loc, result, scheme)
@@ -468,24 +486,25 @@ class Season():
                            options are 'constant' or 'linear'
         """
         # location must be all, home, or away
-        assert loc in ['all', 'home', 'away']
+        assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
         
-        # result must be ...
+        # result must be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+str(result)
         
         # scheme must be 'constant' or 'linear'
-        assert scheme in ['constant', 'linear'], 'scheme='+scheme
+        assert scheme in ['constant', 'linear'], 'scheme='+str(scheme)
         
         # get the projection weights
         weights = getWeights(N, scheme=scheme)
         
         # loop over teams in Season
-        for team in S.teams():
+        for team in self.teams():
             
             # get TeamSeason object
-            tS = S[team]
+            tS = self.all[team]
             
             # get selection of only home games (avoid double counting)
-            games = tS.getGames(loc='home', result=result)
+            games = tS.getGames(loc='all', result=result)
             
             # loop over team's games
             for g in games:
@@ -494,50 +513,31 @@ class Season():
                 date = g.date()
                 
                 # get TeamSeason for opponent
-                tSopp = S[g.away]
+                tSopp = self.all[g.away]
                 
                 # get goals lists for home and away teams
-                hGFlist, hGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
-                aGFlist, aGAlist = tSopp.getGoalsLists(N, loc=loc, result=result, before=date)
+                phGFlist, phGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
+                paGFlist, paGAlist = tSopp.getGoalsLists(N, loc=loc, result=result, before=date)
                 
                 # make sure N prior games were available for both teams
-                if hGF and hGA and aGF and aGA:
+                if phGFlist and phGAlist and paGFlist and paGAlist:
                     
                     # initialize projection variables
-                    hGF, hGA, aGF, aGA = 0.0, 0.0, 0.0, 0.0
+                    phGF, phGA, paGF, paGA = 0.0, 0.0, 0.0, 0.0
                     
                     # loop over window size
                     for i in range(N):
                         
                         # compute the projections
-                        hGF += hGFlist[i] * weights[i]
-                        hGA += hGAlist[i] * weights[i]
-                        aGF += aGFlist[i] * weights[i]
-                        aGA += aGAlist[i] * weights[i]
+                        phGF += phGFlist[i] * weights[i]
+                        phGA += phGAlist[i] * weights[i]
+                        paGF += paGFlist[i] * weights[i]
+                        paGA += paGAlist[i] * weights[i]
                         
                     # compute the projected score differential
-                    pdScore = (hGF+aGA)/2.0 - (aGF+hGA)/2.0
+                    pdScore = (phGF+paGA)/2.0 - (paGF+phGA)/2.0
                     
-                # if N prior games aren't available
-                else:
-                    # set projections to -1 and pdScore to None
-                    hGF, hGA, aGF, aGA, pdScore = -1, -1, -1, -1, None
-                    
-                # add projected data to the Game object
-#                g.insertProjections(hGF, hGA, aGF, aGA, pdScore)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    # add projected data to the Game object
+                    g.insertProjections(phGF, phGA, paGF, paGA, pdScore)
+    
+    

@@ -11,7 +11,6 @@ from objects import TeamSeason
 from objects import Season
 from database import *
 
-
 def main():
     
     # connect to MySQL db and get cursor
@@ -21,8 +20,7 @@ def main():
     # get all available season names
     seasonNames = getSeasonNames(cur)
     
-    # create list of all seasons
-    allSeasons = [getSeason(cur, seasonName) for seasonName in seasonNames]
+    seasonNames = [seasonNames[0]]
     
     # loop over all seasons
     for seasonName in seasonNames:
@@ -30,23 +28,11 @@ def main():
         # get Season for seasonName
         S = getSeason(cur, seasonName)
         
-        # loop over all teams in Season
-        for team in S.teams():
-            
-            # get TeamSeason object
-            tS = S[team]
-            
-            # get games list for team
-            games = tS.getGames(loc='all', result='all')
-            
-            
+        # compute projections for games in season
+        S.getProjections(N=5, loc='all', result='all', scheme='constant')
         
+#    print S.getTeam('DET')
         
-    
-    print allSeasons[0].getTeam('DET')
-    print allSeasons[0].season
-    
-    
     # close cursor and connection to MySQL db
     if cur: cur.close()
     if con: con.close()    
