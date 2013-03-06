@@ -49,7 +49,8 @@ class Game():
             self.agoal  = int(rec[5])
             self.hgoal  = int(rec[6])
             self.result = str(rec[7])
-            
+            self.features = {}
+                        
             #======= projections
             # self.phGF, self.phGA, self.paGF, self.paGA, self.pdScore
             #======= to be created later
@@ -68,16 +69,17 @@ class Game():
         s += self.home       + ' '
         s += str(self.agoal) + ' '
         s += str(self.hgoal) + ' '
+        s += str(self.dScore()) + ' '
         s += self.result
         
         # include projections if available
         try:
-            tmp = self.phGF
-            s += '; p= '
-            s += str(self.phGF) + ' '
-            s += str(self.phGA) + ' '
-            s += str(self.paGF) + ' '
-            s += str(self.paGA) + ' '
+            tmp = self.pdScore
+            s += '; p='
+#            s += str(self.phGF) + ' '
+#            s += str(self.phGA) + ' '
+#            s += str(self.paGF) + ' '
+#            s += str(self.paGA) + ' '
             s += str(self.pdScore)
         except AttributeError:
             pass
@@ -174,7 +176,7 @@ class Game():
         
         # otherwise, return goal differential
         else:
-            return self.ghome - self.gaway
+            return self.hgoal - self.agoal
     
     
     def numericalResult(self):
@@ -211,7 +213,11 @@ class Game():
         self.paGF    = paGF
         self.paGA    = paGA
         self.pdScore = pdScore
+        
+        # add projected score differntial to features dict
+        self.features['pdScore'] = pdScore
     
+        
 
 
 class TeamSeason():
@@ -223,6 +229,7 @@ class TeamSeason():
        games:  list[Game]
     methods:
        insert()
+       gameOnDate(date)
        getGames(loc, result, before, after)
        nGames(loc, result, before, after)
        getGoalsLists(N, loc, result, before)
@@ -235,7 +242,7 @@ class TeamSeason():
         self.team = team
         self.games = []
     
-        
+    
     def __repr__(self):
         """
         Print functionality
@@ -253,7 +260,25 @@ class TeamSeason():
         """
         self.games.append(g)
     
+    
+    def gameOnDate(self, date):
+        """
+        return: Game played on date (if exists)
+        params:
+            date: string | a date string e.g. '2010-10-31'
+        """
+        # select all games played on date (if available)
+        g = [x for x in self.games if x.date() == date]
         
+        # if a game was found, return it
+        if g:
+            return g[0]
+        
+        # otherwise, raise error
+        else:
+            raise IndexError('no Game found on '+date)
+    
+    
     def getGames(self, loc='all', result='all', before=None, after=None):
         """
         return: list[Game] | list of games for team
@@ -512,12 +537,25 @@ class Season():
                 # date of the game
                 date = g.date()
                 
-                # get TeamSeason for opponent
-                tSopp = self.all[g.away]
+                # if current team is home team
+                if team == g.home:
+                    
+                    # get opponent's TeamSeason
+                    tSopp = self.all[g.away]
+                    
+                    # get goals lists for home and away teams
+                    phGFlist, phGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
+                    paGFlist, paGAlist = tSopp.getGoalsLists(N, loc=loc, result=result, before=date)
                 
-                # get goals lists for home and away teams
-                phGFlist, phGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
-                paGFlist, paGAlist = tSopp.getGoalsLists(N, loc=loc, result=result, before=date)
+                # if current team is away team
+                if team == g.away:
+                    
+                    # get opponent's TeamSeason
+                    tSopp = self.all[g.home]
+                    
+                    # get goals lists for home and away teams
+                    paGFlist, paGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
+                    phGFlist, phGAlist = tSopp.getGoalsLists(N, loc=loc, result=result, before=date)                    
                 
                 # make sure N prior games were available for both teams
                 if phGFlist and phGAlist and paGFlist and paGAlist:
