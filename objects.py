@@ -3,14 +3,15 @@
 objects.py
 Author: Brian Boates
 
-objects for hockey analysis
-and prediction package
+objects for hockey analysis and 
+prediction package
 
 classes:
     Game()
     TeamSeason()
     Season()
 """
+from utils import getWeights
 
 class Game():
     """
@@ -31,6 +32,8 @@ class Game():
         goalsFor(team)
         goalsAgainst(team)
         dScore()
+        numericalResult()
+        insertProjections(hGF, hGA, aGF, aGA, pdScore)
     """
     def __init__(self, rec=None):
         """
@@ -174,7 +177,19 @@ class Game():
         # return 1 for non-SO away win
         elif self.away == self.winner(): return 1
     
-
+    
+    def insertProjections(self, hGF, hGA, aGF, aGA, pdScore):
+        """
+        Insert projected scores into Game
+        
+        params:
+              hGF: float | projected GF for home team
+              hGA: float | projected GA for home team
+              aGF: float | projected GF for away team
+              aGA: float | projected GA for away team
+          pdScore: float | projected score differential
+        """
+        pass
 
 
 class TeamSeason():
@@ -352,10 +367,8 @@ class TeamSeason():
         selection = self.getGames(loc=loc, result=result, before=before, after=after) )
         
         return len( selection )
-
-
     
-
+    
     def getGoalsLists(self, N, loc='all', result='all', before=None):
         """
         Compute the total number of "goals for" for 
@@ -393,6 +406,9 @@ class TeamSeason():
             # return the previous N games
             return goalsForList[-N:], goalsAgainstList[-N:]
     
+    
+    
+    
 
 
 
@@ -406,6 +422,7 @@ class Season():
         insert()
         teams()
         getTeam(team)
+        getProjections(N, loc, result, scheme)
     """
     def __init__(self, season='None'):
         """
@@ -436,4 +453,91 @@ class Season():
         return self.all[team]
     
     
+    def getProjections(self, N, loc='all', result='all', scheme='constant'):
+        """
+        Insert projections into each Game: 
+            hGF, aGF, hGA, aGA, pdScore
+            h/a=home/away, GF/GA=goals for/against
+            pdScore= (phGF+paGA)/2 - (paGF+phGA)/2
+        params: 
+               N: int    | window size for weighting/projections
+             loc: string | location of games to include in projections
+                           'all', 'home', or 'away' (default='all')
+          result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+          scheme: string | weighting scheme: default='constant'
+                           options are 'constant' or 'linear'
+        """
+        # location must be all, home, or away
+        assert loc in ['all', 'home', 'away']
+        
+        # result must be ...
+        
+        # scheme must be 'constant' or 'linear'
+        assert scheme in ['constant', 'linear'], 'scheme='+scheme
+        
+        # get the projection weights
+        weights = getWeights(N, scheme=scheme)
+        
+        # loop over teams in Season
+        for team in S.teams():
+            
+            # get TeamSeason object
+            tS = S[team]
+            
+            # get selection of only home games (avoid double counting)
+            games = tS.getGames(loc='home', result=result)
+            
+            # loop over team's games
+            for g in games:
+                
+                # date of the game
+                date = g.date()
+                
+                # get TeamSeason for opponent
+                tSopp = S[g.away]
+                
+                # get goals lists for home and away teams
+                hGFlist, hGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
+                aGFlist, aGAlist = tSopp.getGoalsLists(N, loc=loc, result=result, before=date)
+                
+                # make sure N prior games were available for both teams
+                if hGF and hGA and aGF and aGA:
+                    
+                    # initialize projection variables
+                    hGF, hGA, aGF, aGA = 0.0, 0.0, 0.0, 0.0
+                    
+                    # loop over window size
+                    for i in range(N):
+                        
+                        # compute the projections
+                        hGF += hGFlist[i] * weights[i]
+                        hGA += hGAlist[i] * weights[i]
+                        aGF += aGFlist[i] * weights[i]
+                        aGA += aGAlist[i] * weights[i]
+                        
+                    # compute the projected score differential
+                    pdScore = (hGF+aGA)/2.0 - (aGF+hGA)/2.0
+                    
+                # if N prior games aren't available
+                else:
+                    # set projections to -1 and pdScore to None
+                    hGF, hGA, aGF, aGA, pdScore = -1, -1, -1, -1, None
+                    
+                # add projected data to the Game object
+#                g.insertProjections(hGF, hGA, aGF, aGA, pdScore)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
