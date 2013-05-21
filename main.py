@@ -40,15 +40,18 @@ def main():
         # append all games from S to gameList
         gameList += S.allGames(featureList)
         
-    # get all features from all games
-    features, results = getFeatures(gameList, featureList)
+    # get features dataframe for all games
+    features = getFeatures(gameList, featureList, scale=True)
     
-    for j in range(len(features[0])):
-        for i in range(len(features)):
-            print features[i][j],
-        print results[j]
+    print features.tail(100)
+    
+    
+#    for j in range(len(features[0])):
+#        for i in range(len(features)):
+#            print features[i][j],
+#        print results[j]
        
-    makePlots(features[0], results, nbins=100)
+#    makePlots(features[0], results, nbins=100)
     
      
         

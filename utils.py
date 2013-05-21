@@ -5,6 +5,7 @@ Author: Brian Boates
 
 Utility methods for hockey analysis
 """
+import pandas
 
 def getWeights(N, scheme='constant'):
     """
@@ -58,39 +59,61 @@ def scaleFeature(f):
     return scaledFeature
 
 
-def getFeatures(gameList, featureList):
+def scaleFeatures(features, featureList):
     """
-    return: list[list[float]], list[float]
-            features matrix, results vector
+    return: dataframe | scaled features dataframe
+    
+    params:
+         features: dataframe    | original unscaled features
+      featureList: list[string] | list of features to scale
+    """
+    # scale each feature
+    for f in featureList:
+        features[f] = scaleFeature(features[f].values)
+    return features
+
+
+def getFeatures(gameList, featureList, scale=True):
+    """
+    return: features dataframe
+    
     params:
           gameList: list[Game]   | list of Games
        featureList: list[string] | list of feature names
+             scale: bool         | whether to feature scale or not
     """
-    # initialize features and results vectors
-    features, results = [], []
+    # initialize features array
+    all_features = []
     
-    # loop over features in Game
-    for i, f in enumerate(featureList):
+    # loop over all Games
+    for g in gameList:
         
-        # initialize list for feature
-        feature = []
+        # create empty feature vector for current Game
+        game_features = []
         
-        # loop over all games in gameList
-        for g in gameList:
-                        
-            # append feature from game
-            feature.append( g.features[f] )
+        # loop over requested features
+        for f in featureList:
             
-            # build the results vector (only once)
-            if i == 0: results.append( g.dScore() )
-                    
-        # scale the feature
-        feature = scaleFeature(feature)
+            # append to game features
+            game_features.append( g.features[f] )
         
-        # append game feature to overall list
-        features.append( feature )
+        # set the target metric (1 for SO, 0 for anything else)
+        result = int(g.dScore() == 0)
         
-    return features, results
+        # append the result as the final Game feature
+        game_features.append(result)
+        
+        # append the Game feature list to features array
+        all_features.append(game_features)
+    
+    # create features dataframe
+    features = pandas.DataFrame(all_features, columns=featureList+['class'])
+    
+    # feature scaling if requested
+    if scale:
+        features = scaleFeatures(features, featureList)
+    
+    return features
 
 
 def makePlots(feature, results, nbins=100):
