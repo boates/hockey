@@ -70,8 +70,8 @@ def dbCreate(db='hockey'):
             
             # each table has a date, home and away teams/goals and a result
             command  = "CREATE TABLE IF NOT EXISTS "+season+" (id INT PRIMARY KEY "
-            command += "AUTO_INCREMENT, year INT, month INT, day INT, away CHAR(3), "
-            command += "home CHAR(3), agoal INT, hgoal INT, result CHAR(2))"
+            command += "AUTO_INCREMENT, date DATE, away CHAR(3), home CHAR(3), "
+            command += "agoal INT, hgoal INT, result CHAR(2))"
             print command
             cur.execute(command)
             
@@ -93,7 +93,7 @@ def dbPopulate(cur, table):
         table: string | the name of the database table
     """
     # create root string for MySQL insertions
-    root = "INSERT INTO "+table+"(year,month,day,away,home,agoal,hgoal,result) "
+    root = "INSERT INTO "+table+"(date,away,home,agoal,hgoal,result) "
     
     # open the corresponding .scores file
     scoresFile = open('scores/'+table.replace('_','-')+'.scores', 'rU')
@@ -104,7 +104,7 @@ def dbPopulate(cur, table):
         # split the line
         row = line.split()
         # assign date variables
-        year, month, day = row[0].split('-')
+        date = row[0]
         # assign away and home teams
         away, home = row[1], row[3]
         # assign away and home goals
@@ -113,7 +113,7 @@ def dbPopulate(cur, table):
         result = row[5]
         
         # build the insertion command for current line
-        command = root + "VALUES("+year+","+month+","+day+",\'"+away+"\',\'"+home+"\',"+ \
+        command = root + "VALUES(\'"+date+"\',\'"+away+"\',\'"+home+"\',"+ \
                                    agoal+","+hgoal+",\'"+result+"\')"
                                   
         cur.execute(command)
