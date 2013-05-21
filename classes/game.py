@@ -73,10 +73,6 @@ class Game():
         try:
             tmp = self.pdScore
             s += '| dp='
-#            s += str(self.phGF) + ' '
-#            s += str(self.phGA) + ' '
-#            s += str(self.paGF) + ' '
-#            s += str(self.paGA) + ' '
             s += str(self.pdScore) + ' '
         except AttributeError:
             pass
