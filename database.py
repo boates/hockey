@@ -13,9 +13,9 @@ and season data.
 """
 import glob
 import MySQLdb as mdb
-from classes import Game
-from classes import TeamSeason
-from classes import Season
+from classes.game import Game
+from classes.team_season import TeamSeason
+from classes.season import Season
 
 def dbRemove(db='hockey'):
     """

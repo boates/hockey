@@ -6,9 +6,9 @@ Author: Brian Boates
 Main script for running hockey analysis
 """
 import MySQLdb as mdb
-from classes import Game
-from classes import TeamSeason
-from classes import Season
+from classes.game import Game
+from classes.team_season import TeamSeason
+from classes.season import Season
 from database import *
 from utils import *
 
