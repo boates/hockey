@@ -23,10 +23,8 @@ def dbRemove(db='hockey'):
     params:
             db: string | the name of the MySQL database
     """
-    # connect to MySQL
+    # connect to MySQL and create cursor
     con = mdb.connect(host='localhost', user='root')
-    
-    # create cursor for MySQL
     cur = con.cursor()
     
     # check to see if database exists
@@ -36,6 +34,10 @@ def dbRemove(db='hockey'):
     # if database exists, remove it entirely
     if exists:
         cur.execute("DROP database "+db)
+        
+    # close cursor and connection
+    if cur: cur.close()
+    if con: con.close()
 
 
 def dbCreate(db='hockey'):
@@ -44,10 +46,8 @@ def dbCreate(db='hockey'):
     params:
             db: string | the name of the MySQL database
     """
-    # connect to MySQL
+    # connect to MySQL and create cursor
     con = mdb.connect(host='localhost', user='root')
-    
-    # create cursor for MySQL
     cur = con.cursor()
     
     # create the hockey database if not already present
@@ -78,10 +78,8 @@ def dbCreate(db='hockey'):
             # populate the current season table
             dbPopulate(cur=cur, table=season)
                                 
-    # close cursor to skillrank database
+    # close cursor and connection
     if cur: cur.close()
-    
-    # close connection to skillrank database
     if con: con.close()
 
 
@@ -103,7 +101,7 @@ def dbPopulate(cur, table):
         
         # split the line
         row = line.split()
-        # assign date variables
+        # assign date variable
         date = row[0]
         # assign away and home teams
         away, home = row[1], row[3]
@@ -182,10 +180,10 @@ def getTeamSeason(cur, team, table, loc='all'):
     s = TeamSeason(season=table, team=team)
     
     # loop over all games from team's season
-    for i, y, m, d, a, h, ag, hg, r in fetch:
+    for i, d, a, h, ag, hg, r in fetch:
         
         # create game object
-        g = Game( rec=(y,m,d,a,h,ag,hg,r) )
+        g = Game( rec=(d,a,h,ag,hg,r) )
         
         # insert game into season
         s.insert(g)

@@ -17,6 +17,7 @@ class Game():
     """
     Game object
     fields:
+          date: string
           year: int
          month: int
            day: int
@@ -26,7 +27,7 @@ class Game():
          hgoal: int
         result: string
     methods:
-        date()
+        getDate()
         winner()
         loser()
         goalsFor(team)
@@ -42,14 +43,15 @@ class Game():
         if no record given at this time)
         """
         if rec:
-            self.year   = int(rec[0])
-            self.month  = int(rec[1])
-            self.day    = int(rec[2])
-            self.away   = str(rec[3])
-            self.home   = str(rec[4])
-            self.agoal  = int(rec[5])
-            self.hgoal  = int(rec[6])
-            self.result = str(rec[7])
+            self.date   = str(rec[0])
+            self.year   = int(self.date.split('-')[0])
+            self.month  = int(self.date.split('-')[1])
+            self.day    = int(self.date.split('-')[2])
+            self.away   = str(rec[1])
+            self.home   = str(rec[2])
+            self.agoal  = int(rec[3])
+            self.hgoal  = int(rec[4])
+            self.result = str(rec[5])
             self.features = {}
                         
             #======= projections
@@ -65,13 +67,13 @@ class Game():
         Print functionality
         """
         # build the return string piece by piece
-        s  = self.date()     + ' '
-        s += self.away       + ' '
-        s += self.home       + ' '
-        s += str(self.agoal) + ' '
-        s += str(self.hgoal) + ' '
+        s  = self.date          + ' '
+        s += self.away          + ' '
+        s += self.home          + ' '
+        s += str(self.agoal)    + ' '
+        s += str(self.hgoal)    + ' '
         s += str(self.dScore()) + ' '
-        s += self.result     + ' '
+        s += self.result        + ' '
         
         # include projections if available
         try:
@@ -96,30 +98,19 @@ class Game():
         
         return s
     
-        
-    def date(self):
+    
+    def getDate(self):
         """
-        return: string | formatted date string: 'YYYY-MM-DD'
+        return: string | date (i.e. 'YYYY-MM-DD')
         """
-        # add year to date string
-        d = str(self.year) + '-'
-        
-        # if month less than 10, add extra 0
-        if self.month < 10:
-            d += '0'
-        d += str(self.month) + '-'
-        
-        # if day less than 10, add extra 0
-        if self.day < 10:
-            d += '0'
-        d += str(self.day)
-        
-        return d
+        return self.date
     
     
     def winner(self):
         """
         return: string | winning team name
+        
+        note: includes SO outcomes
         """
         if   self.agoal > self.hgoal: return self.away
         elif self.hgoal > self.agoal: return self.home
@@ -128,23 +119,27 @@ class Game():
     def loser(self):
         """
         return: string | losing team name
+        
+        note: includes SO outcomes
         """
         if   self.agoal > self.hgoal: return self.home
         elif self.hgoal > self.agoal: return self.away
     
     
-    def goalsFor(self, team):
+    def goalsFor(self, team, includeSO=False):
         """
         return: int | number of goals for given team
                       does NOT include SO goals
         params:
-            team: string | 3-character team name
+               team: string | 3-character team name
+          includeSO: bool   | whether SO goals count or not
         """
         # team must be one of two teams in Game
         assert team in [self.home, self.away], 'team='+str(team)
         
-        # SO edge case, SO goals do not count
-        if self.result == 'SO': return min(self.hgoal, self.agoal)
+        # do not count SO goals if specified
+        if self.result == 'SO' and not includeSO:
+            return min(self.hgoal, self.agoal)
         
         # if given team was the home team
         elif team == self.home: return self.hgoal
@@ -302,7 +297,7 @@ class TeamSeason():
             date: string | a date string e.g. '2010-10-31'
         """
         # select all games played on date (if available)
-        g = [x for x in self.games if x.date() == date]
+        g = [x for x in self.games if x.date == date]
         
         # if a game was found, return it
         if g:
@@ -336,15 +331,15 @@ class TeamSeason():
             
             # consider all games between two dates
             if before and after:
-                selection = [g for g in self.games if before < g.date() < after]
+                selection = [g for g in self.games if before < g.date < after]
             
             # consider all games before given date
             elif before:
-                selection = [g for g in self.games if g.date() < before]
+                selection = [g for g in self.games if g.date < before]
                 
             # consider all games after given date
             elif after:
-                selection = [g for g in self.games if g.date() > after]
+                selection = [g for g in self.games if g.date > after]
                 
             # consider all games
             else:
@@ -358,15 +353,15 @@ class TeamSeason():
             
             # consider home games between two dates
             if before and after:
-                selection = [g for g in homeGames if before < g.date() < after]
+                selection = [g for g in homeGames if before < g.date < after]
              
             # consider only home games before given date
             elif before:
-                selection = [g for g in homeGames if g.date() < before]
+                selection = [g for g in homeGames if g.date < before]
             
             # consider only home games after given date
             elif after:
-                selection = [g for g in homeGames if g.date() > after]
+                selection = [g for g in homeGames if g.date > after]
                 
             # consider all home games
             else:
@@ -380,15 +375,15 @@ class TeamSeason():
             
             # consider away games between two dates
             if before and after:
-                selection = [g for g in awayGames if before < g.date() < after]
+                selection = [g for g in awayGames if before < g.date < after]
             
             # consider only away games before given date
             if before:
-                selection = [g for g in awayGames if g.date() < before]
+                selection = [g for g in awayGames if g.date < before]
             
             # consider only away games after given date
             if after:
-                selection = [g for g in awayGames if g.date() > after]
+                selection = [g for g in awayGames if g.date > after]
                 
             # consider all away games
             else: 
@@ -571,7 +566,7 @@ class Season():
             for g in games:
                 
                 # date of the game
-                date = g.date()
+                date = g.date
                 
                 # if current team is home team
                 if team == g.home:
@@ -664,7 +659,7 @@ class Season():
                     g.insertStreak(streak, loc='home')                    
                     # also insert into the copy of the game 
                     # in the opponent's TeamSeason
-                    gOpp = self.getTeam(g.away).gameOnDate(g.date())
+                    gOpp = self.getTeam(g.away).gameOnDate(g.date)
                     gOpp.insertStreak(streak, loc='home')
                     
                 elif team == g.away:
@@ -672,7 +667,7 @@ class Season():
                     g.insertStreak(streak, loc='away')
                     # also insert into the copy of the game 
                     # in the opponent's TeamSeason
-                    gOpp = self.getTeam(g.home).gameOnDate(g.date())
+                    gOpp = self.getTeam(g.home).gameOnDate(g.date)
                     gOpp.insertStreak(streak, loc='away')
     
     
@@ -704,7 +699,7 @@ class Season():
                 gameList += tS.getGames(loc='home')
             
         # sort the gameList by date
-        gameList = sorted(gameList, key=Game.date)
+        gameList = sorted(gameList, key=Game.getDate)
             
         return gameList
     
