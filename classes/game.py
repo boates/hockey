@@ -123,7 +123,7 @@ class Game():
     def goalsFor(self, team, includeSO=False):
         """
         return: int | number of goals for given team
-                      does NOT include SO goals
+                      (may include SO goals)
         params:
                team: string | 3-character team name
           includeSO: bool   | whether SO goals count or not
@@ -142,18 +142,20 @@ class Game():
         elif team == self.away: return self.agoal
     
         
-    def goalsAgainst(self, team):
+    def goalsAgainst(self, team, includeSO=False):
         """
         return: int | number of goals against given team
-                      does NOT include SO goals
+                      (may include SO goals)
         params:
-            team: string | 3-character team name
+               team: string | 3-character team name
+          includeSO: bool   | whether SO goals count or not
         """
         # team must be one of two teams in Game
         assert team in [self.home, self.away], 'team='+str(team)
         
-        # SO edge case, SO goals do not count
-        if self.result == 'SO': return min(self.hgoal, self.agoal)
+        # do not count SO goals if specified
+        if self.result == 'SO' and not includeSO:
+            return min(self.hgoal, self.agoal)
         
         # if given team was the home team
         elif team == self.home: return self.agoal
@@ -162,15 +164,18 @@ class Game():
         elif team == self.away: return self.hgoal
     
         
-    def dScore(self):
+    def dScore(self, includeSO=False):
         """
         return: int | score differential for game
                     | computed as ghome - gaway so that pos/neg
                     | values correspond to home/away wins
-                    | return 0 if game went to SO
+                    | return 0 if game went to SO unless
+                    | otherwise specified
+        params:
+            includeSO: bool | whether SO goals count or not
         """
-        # return 0 in the case of a shootout
-        if self.result == 'SO':
+        # return 0 in the case of a shootout unless otherwise specified
+        if self.result == 'SO' and not includeSO:
             return 0
         
         # otherwise, return goal differential
@@ -182,17 +187,20 @@ class Game():
         """
         return: int | a number version of the game result
                     |   0: home win / away loss (including OT)
-                    |   1: away win / home loss (including OT)
-                    |   2: SO
+                    |   0: away win / home loss (including OT)
+                    |   1: SO
         """
-        # reutnr 2 for SO
-        if   self.result == 'SO': return 2
+        # reutnr 1 for SO
+        if   self.result == 'SO': return 1
+        
+        #====================================================#
+        # right now all regulation games are classified as 0 #
         
         # return 0 for non-SO home win
         elif self.home == self.winner(): return 0
         
-        # return 1 for non-SO away win
-        elif self.away == self.winner(): return 1
+        # return 0 for non-SO away win
+        elif self.away == self.winner(): return 0
     
     
     def insertProjections(self, phGF, phGA, paGF, paGA, pdScore):
@@ -213,8 +221,14 @@ class Game():
         self.paGA    = paGA
         self.pdScore = pdScore
         
+        # add projected goals for / against to features dict
+        self.features['proj_home_GF'] = phGF
+        self.features['proj_home_GA'] = phGA
+        self.features['proj_away_GF'] = paGF
+        self.features['proj_away_GA'] = paGA
+        
         # add projected score differntial to features dict
-        self.features['pdScore'] = pdScore
+        self.features['proj_diff_score'] = pdScore
     
     
     def insertStreak(self, streak, loc):
@@ -230,13 +244,17 @@ class Game():
         assert loc in ['home', 'away'], 'loc='+str(loc)
         
         # insert the streak
-        if   loc == 'home': self.hstreak = streak
-        elif loc == 'away': self.astreak = streak
+        if   loc == 'home':
+            self.hstreak = streak
+            self.features['home_streak'] = streak
+        elif loc == 'away':
+            self.astreak = streak
+            self.features['away_streak'] = streak
         
         # if both home and away streaks are available
         # put the difference into the features dict
         try:
-            self.features['dStreak'] = self.hstreak - self.astreak
+            self.features['diff_streak'] = self.hstreak - self.astreak
         except AttributeError:
             pass
     

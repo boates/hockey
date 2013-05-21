@@ -23,7 +23,7 @@ def main():
     
     # initialize list to hold all games from all seasons
     gameList = []
-    featureList = ['pdScore', 'dStreak']
+    featureList = ['proj_diff_score', 'diff_streak']
     
     # loop over all seasons
     for seasonName in seasonNames:

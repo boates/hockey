@@ -7,6 +7,7 @@ Season object for hockey analysis and
 prediction package
 """
 from utils import getWeights
+from game import Game
 
 class Season():
     """
@@ -215,7 +216,7 @@ class Season():
                 # consider only home games to avoid duplicates
                 gList = tS.getGames(loc='home')
                 # append only games with all features
-                gameList += [g for g in gList if sorted(g.features) == sorted(featureList)]
+                gameList += [g for g in gList if not [f for f in featureList if f not in g.features]]
             
             # if features not specified
             else:
