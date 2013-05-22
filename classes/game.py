@@ -27,6 +27,7 @@ class Game():
         ended_in_regulation()
         ended_in_OT()
         ended_in_SO()
+        has_team(team)
         goals_for(team)
         goals_against(team)
         diff_score()
