@@ -132,7 +132,7 @@ class Season():
                     pdScore = (phGF+paGA)/2.0 - (paGF+phGA)/2.0
                     
                     # add projected data to the Game object
-                    g.insertProjections(phGF, phGA, paGF, paGA, pdScore)
+                    g.insert_projections(phGF, phGA, paGF, paGA, pdScore)
     
     
     def getStreaks(self, loc='all', result='all'):

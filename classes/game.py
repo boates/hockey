@@ -31,7 +31,7 @@ class Game():
         goals_against(team)
         diff_score()
         numerical_result()
-        insertProjections(hGF, hGA, aGF, aGA, pdScore)
+        insert_projections(hGF, hGA, aGF, aGA, pdScore)
         insertStreak(streak, loc)
     """
     def __init__(self, rec=None):
@@ -223,7 +223,7 @@ class Game():
         elif self.away == self.winner(): return 0
     
     
-    def insertProjections(self, phGF, phGA, paGF, paGA, pdScore):
+    def insert_projections(self, phGF, phGA, paGF, paGA, pdScore):
         """
         Insert projected scores into Game
         
