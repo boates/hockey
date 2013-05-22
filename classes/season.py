@@ -82,10 +82,10 @@ class Season():
         for team in self.teams():
             
             # get TeamSeason object
-            tS = self.get_team_season(team)
+            team_season = self.get_team_season(team)
             
             # get selection of only all games (prone to double counting)
-            games = tS.get_games(location='all', result=result)
+            games = team_season.get_games(location='all', result=result)
             
             # loop over team's games
             for g in games:
@@ -97,21 +97,21 @@ class Season():
                 if team == g.home:
                     
                     # get opponent's TeamSeason
-                    tSopp = self.get_team_season(g.away)
+                    team_season_opponent = self.get_team_season(g.away)
                     
                     # get goals lists for home and away teams
-                    home_GF_list, home_GA_list =    tS.get_goals_lists(window, location=location, result=result, before=date)
-                    away_GF_list, away_GA_list = tSopp.get_goals_lists(window, location=location, result=result, before=date)
+                    home_GF_list, home_GA_list =          team_season.get_goals_lists(window, location=location, result=result, before=date)
+                    away_GF_list, away_GA_list = team_season_opponent.get_goals_lists(window, location=location, result=result, before=date)
                 
                 # if current team is away team
                 if team == g.away:
                     
                     # get opponent's TeamSeason
-                    tSopp = self.get_team_season(g.home)
+                    team_season_opponent = self.get_team_season(g.home)
                     
                     # get goals lists for home and away teams
-                    away_GF_list, away_GA_list =    tS.get_goals_lists(window, location=location, result=result, before=date)
-                    home_GF_list, home_GA_list = tSopp.get_goals_lists(window, location=location, result=result, before=date)                    
+                    away_GF_list, away_GA_list =          team_season.get_goals_lists(window, location=location, result=result, before=date)
+                    home_GF_list, home_GA_list = team_season_opponent.get_goals_lists(window, location=location, result=result, before=date)                    
                 
                 # make sure N prior games were available for both teams
                 if home_GF_list and home_GA_list and away_GF_list and away_GA_list:
