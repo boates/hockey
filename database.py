@@ -183,7 +183,7 @@ def getTeamSeason(cur, team, table, loc='all'):
     for i, d, a, h, ag, hg, r in fetch:
         
         # create game object
-        g = Game( rec=(d,a,h,ag,hg,r) )
+        g = Game( record=(d,a,h,ag,hg,r) )
         
         # insert game into season
         s.insert(g)

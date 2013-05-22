@@ -35,26 +35,32 @@ class Game():
         insert_projections(proj_home_GF, proj_home_GA, prj_away_GF, proj_away_GA, proj_diff_score)
         insert_streak(streak, location)
     """
-    def __init__(self, rec=None):
+    def __init__(self, record=None):
         """
-        Initialize Game object (everything None
-        if no record given at this time)
+        Initialize Game object, record mandatory
         """
-        if rec:
-            self.date   = str(rec[0])
+        if record:
+            self.date   = str(record[0])
             self.year   = int(self.date.split('-')[0])
             self.month  = int(self.date.split('-')[1])
             self.day    = int(self.date.split('-')[2])
-            self.away   = str(rec[1])
-            self.home   = str(rec[2])
-            self.agoal  = int(rec[3])
-            self.hgoal  = int(rec[4])
-            self.result = str(rec[5])
+            self.away   = str(record[1])
+            self.home   = str(record[2])
+            self.agoal  = int(record[3])
+            self.hgoal  = int(record[4])
+            self.result = str(record[5])
             self.features = {}
                         
-            #======= projections
-            # self.phGF, self.phGA, self.paGF, self.paGA, self.pdScore
-            #======= to be created later
+            #==== created by insert_projections
+            # self.proj_home_GF
+            # self.proj_home_GA
+            # self.proj_away_GF
+            # self.proj_away_GA
+            # self.proj_diff_score
+            #==== created by insert_streak
+            # self.home_streak
+            # self.away_streak
+            #======================
         else:
             s = 'Must provide record when initializting game object'
             raise AttributeError(s)
@@ -75,18 +81,18 @@ class Game():
         
         # include projections if available
         try:
-            tmp = self.pdScore
+            tmp = self.prof_diff_score
             s += '| dp='
-            s += str(self.pdScore) + ' '
+            s += str(self.proj_diff_score) + ' '
         except AttributeError:
             pass
         
         # include streaks if available
         try:
-            a, b = self.hstreak, self.astreak
+            a, b = self.home_streak, self.away_streak
             s += '| st='
-            s += str(self.astreak) + ' '
-            s += str(self.hstreak)
+            s += str(self.away_streak) + ' '
+            s += str(self.home_streak)
         except AttributeError:
             pass
         
