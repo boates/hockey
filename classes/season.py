@@ -18,7 +18,7 @@ class Season():
     methods:
         insert(teamSeason)
         teams()
-        getTeam(team)
+        get_team_season(team)
         getProjections(N, loc, result, scheme)
         getStreaks(loc, result)
         allGames()
@@ -45,7 +45,7 @@ class Season():
         return sorted( self.all.keys() )
     
     
-    def getTeam(self, team):
+    def get_team_season(self, team):
         """
         return: TeamSeason | object for given team's season
         """
@@ -82,7 +82,7 @@ class Season():
         for team in self.teams():
             
             # get TeamSeason object
-            tS = self.getTeam(team)
+            tS = self.get_team_season(team)
             
             # get selection of only all games (prone to double counting)
             games = tS.get_games(location='all', result=result)
@@ -97,7 +97,7 @@ class Season():
                 if team == g.home:
                     
                     # get opponent's TeamSeason
-                    tSopp = self.getTeam(g.away)
+                    tSopp = self.get_team_season(g.away)
                     
                     # get goals lists for home and away teams
                     phGFlist, phGAlist =    tS.get_goals_lists(N, location=loc, result=result, before=date)
@@ -107,7 +107,7 @@ class Season():
                 if team == g.away:
                     
                     # get opponent's TeamSeason
-                    tSopp = self.getTeam(g.home)
+                    tSopp = self.get_team_season(g.home)
                     
                     # get goals lists for home and away teams
                     paGFlist, paGAlist =    tS.get_goals_lists(N, location=loc, result=result, before=date)
@@ -146,7 +146,7 @@ class Season():
         for team in self.teams():
             
             # get current TeamSeason
-            tS = self.getTeam(team)
+            tS = self.get_team_season(team)
             
             # get all prior games for team
             games = tS.get_games(location=loc, result=result)
@@ -184,7 +184,7 @@ class Season():
                     g.insert_streak(streak, location='home')                    
                     # also insert into the copy of the game 
                     # in the opponent's TeamSeason
-                    gOpp = self.getTeam(g.away).game_on_date(g.date)
+                    gOpp = self.get_team_season(g.away).game_on_date(g.date)
                     gOpp.insert_streak(streak, location='home')
                     
                 elif team == g.away:
@@ -192,7 +192,7 @@ class Season():
                     g.insert_streak(streak, location='away')
                     # also insert into the copy of the game 
                     # in the opponent's TeamSeason
-                    gOpp = self.getTeam(g.home).game_on_date(g.date)
+                    gOpp = self.get_team_season(g.home).game_on_date(g.date)
                     gOpp.insert_streak(streak, location='away')
     
     
@@ -209,7 +209,7 @@ class Season():
         for team in self.teams():
             
             # get TeamSeason for team
-            tS = self.getTeam(team)
+            tS = self.get_team_season(team)
             
             # if specific features requested
             if featureList:
