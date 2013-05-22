@@ -19,7 +19,7 @@ class Season():
         insert(teamSeason)
         teams()
         get_team_season(team)
-        getProjections(N, loc, result, scheme)
+        get_projections(N, loc, result, scheme)
         getStreaks(loc, result)
         allGames()
     """
@@ -52,7 +52,7 @@ class Season():
         return self.all[team]
     
     
-    def getProjections(self, N, loc='all', result='all', scheme='constant'):
+    def get_projections(self, N, loc='all', result='all', scheme='constant'):
         """
         Insert projections into each Game: 
             hGF, aGF, hGA, aGA, pdScore

@@ -32,7 +32,7 @@ def main():
         S = getSeason(cur, seasonName)
         
         # compute projections for games in season, append to feature list
-        S.getProjections(N=10, loc='all', result='all', scheme='constant')
+        S.get_projections(N=10, loc='all', result='all', scheme='constant')
         
         # compute streaks for all teams' games, append to feature list
         S.getStreaks(loc='all', result='all')
