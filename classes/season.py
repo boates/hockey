@@ -152,10 +152,10 @@ class Season():
         for team in self.teams():
             
             # get current TeamSeason
-            tS = self.get_team_season(team)
+            team_season = self.get_team_season(team)
             
             # get all prior games for team
-            games = tS.get_games(location=location, result=result)
+            games = team_season.get_games(location=location, result=result)
             
             # loop through team's games
             for i, g in enumerate(games):
