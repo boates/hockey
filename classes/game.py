@@ -30,7 +30,7 @@ class Game():
         goals_for(team)
         goals_against(team)
         diff_score()
-        numericalResult()
+        numerical_result()
         insertProjections(hGF, hGA, aGF, aGA, pdScore)
         insertStreak(streak, loc)
     """
@@ -203,7 +203,7 @@ class Game():
             return self.hgoal - self.agoal
     
     
-    def numericalResult(self):
+    def numerical_result(self):
         """
         return: int | a number version of the game result
                     |   0: home win / away loss (including OT)
@@ -211,7 +211,7 @@ class Game():
                     |   1: SO
         """
         # reutnr 1 for SO
-        if   self.result == 'SO': return 1
+        if self.result == 'SO': return 1
         
         #====================================================#
         # right now all regulation games are classified as 0 #
