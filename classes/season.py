@@ -224,7 +224,7 @@ class Season():
                 gameList += tS.getGames(loc='home')
             
         # sort the gameList by date
-        gameList = sorted(gameList, key=Game.getDate)
+        gameList = sorted(gameList, key=Game.get_date)
             
         return gameList
     

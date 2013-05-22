@@ -227,7 +227,7 @@ class TeamSeason():
         games = self.getGames(loc=loc, result=result, before=before)
         
         # get goals for and goals against lists
-        goalsForList     = [g.goalsFor(self.team)     for g in games]
+        goalsForList     = [g.goals_for(self.team)     for g in games]
         goalsAgainstList = [g.goalsAgainst(self.team) for g in games]
         
         # check to see if enough data for N

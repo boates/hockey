@@ -21,13 +21,13 @@ class Game():
          hgoal: int
         result: string
     methods:
-        getDate()
+        get_date()
         winner()
         loser()
         ended_in_regulation()
         ended_in_OT()
         ended_in_SO()
-        goalsFor(team)
+        goals_for(team)
         goalsAgainst(team)
         dScore()
         numericalResult()
@@ -92,7 +92,7 @@ class Game():
         return s
     
     
-    def getDate(self):
+    def get_date(self):
         """
         return: string | date (i.e. 'YYYY-MM-DD')
         """
@@ -118,6 +118,7 @@ class Game():
         if   self.agoal > self.hgoal: return self.home
         elif self.hgoal > self.agoal: return self.away
     
+    
     def ended_in_regulation(self):
         """
         return: bool | whether the game ended in regulation or not
@@ -139,19 +140,19 @@ class Game():
         return self.result == 'SO'
     
     
-    def goalsFor(self, team, includeSO=False):
+    def goals_for(self, team, include_SO=False):
         """
         return: int | number of goals for given team
                       (may include SO goals)
         params:
-               team: string | 3-character team name
-          includeSO: bool   | whether SO goals count or not
+                team: string | 3-character team name
+          include_SO: bool   | whether SO goals count or not
         """
         # team must be one of two teams in Game
         assert team in [self.home, self.away], 'team='+str(team)
         
         # do not count SO goals if specified
-        if self.result == 'SO' and not includeSO:
+        if self.result == 'SO' and not include_SO:
             return min(self.hgoal, self.agoal)
         
         # if given team was the home team
