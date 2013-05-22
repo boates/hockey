@@ -209,30 +209,30 @@ class Season():
             featureList: list[string] | list of feature names
         """
         # initialize list to hold all games
-        gameList = []
+        game_list = []
         
         # loop over all teams in season
         for team in self.teams():
             
             # get TeamSeason for team
-            tS = self.get_team_season(team)
+            team_season = self.get_team_season(team)
             
             # if specific features requested
             if featureList:
                 # consider only home games to avoid duplicates
-                gList = tS.get_games(location='home')
+                g_list = team_season.get_games(location='home')
                 # append only games with all features
-                gameList += [g for g in gList if not [f for f in featureList if f not in g.features]]
+                game_list += [g for g in g_list if not [f for f in featureList if f not in g.features]]
             
             # if features not specified
             else:
                 # only append team's home games (avoids duplicates)
-                gameList += tS.get_games(location='home')
+                game_list += team_season.get_games(location='home')
             
-        # sort the gameList by date
-        gameList = sorted(gameList, key=Game.get_date)
+        # sort the game_list by date
+        game_list = sorted(game_list, key=Game.get_date)
             
-        return gameList
+        return game_list
     
 
 
