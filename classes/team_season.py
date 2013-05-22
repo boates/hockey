@@ -17,7 +17,7 @@ class TeamSeason():
     methods:
        insert()
        game_on_date(date)
-       get_games(loc, result, before, after)
+       get_games(location, result, before, after)
        nGames(loc, result, before, after)
        getGoalsLists(N, loc, result, before)
     """
@@ -66,26 +66,26 @@ class TeamSeason():
             raise IndexError('no Game found on '+date)
     
     
-    def get_games(self, loc='all', result='all', before=None, after=None):
+    def get_games(self, location='all', result='all', before=None, after=None):
         """
         return: list[Game] | list of games for team
                              in TeamSeason
         params:
-              loc: string | 'all', 'home', or 'away'
-           result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
-           before: string | cut-off date to consider games before
-                            (e.g. '2010-10-31')
-            after: string | cut-off date to consider games after
-                            (e.g. '2010-10-31')
+          location: string | 'all', 'home', or 'away'
+            result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+            before: string | cut-off date to consider games before
+                             (e.g. '2010-10-31')
+             after: string | cut-off date to consider games after
+                             (e.g. '2010-10-31')
         """
-        # loc can only be 'all', 'home' or 'away'
-        assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
+        # location can only be 'all', 'home' or 'away'
+        assert location in ['all', 'home', 'away'], 'location='+str(location)
         
         # result can only be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
         assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+str(result)
         
         # consider both home and away games
-        if loc == 'all':
+        if location == 'all':
             
             # consider all games between two dates
             if before and after:
@@ -104,7 +104,7 @@ class TeamSeason():
                 selection = self.games
         
         # consider only home games
-        elif loc == 'home':
+        elif location == 'home':
             
             # select all home games
             homeGames = [g for g in self.games if self.team == g.home]
@@ -126,7 +126,7 @@ class TeamSeason():
                 selection = homeGames
                 
         # consider only away games
-        elif loc == 'away':
+        elif location == 'away':
             
             # select all away games
             awayGames = [g for g in self.games if self.team == g.away]
@@ -198,7 +198,7 @@ class TeamSeason():
         assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
         
         # retrieve appropriate selection of games
-        selection = self.get_games(loc=loc, result=result, before=before, after=after)
+        selection = self.get_games(location=loc, result=result, before=before, after=after)
         
         return len( selection )
     
@@ -224,7 +224,7 @@ class TeamSeason():
         assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+str(result)
         
         # get all games with given location and result before given date
-        games = self.get_games(loc=loc, result=result, before=before)
+        games = self.get_games(location=loc, result=result, before=before)
         
         # get goals for and goals against lists
         goalsForList     = [g.goals_for(self.team)     for g in games]
