@@ -7,7 +7,7 @@ Utility methods for hockey analysis
 """
 import pandas
 
-def getWeights(N, scheme='constant'):
+def get_weights(N, scheme='constant'):
     """
     return: list[float] | list of weights, sum to 1
     params:

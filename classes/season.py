@@ -6,7 +6,7 @@ Author: Brian Boates
 Season object for hockey analysis and 
 prediction package
 """
-from utils import getWeights
+from utils import get_weights
 from game import Game
 
 class Season():
@@ -76,7 +76,7 @@ class Season():
         assert scheme in ['constant', 'linear'], 'scheme='+str(scheme)
         
         # get the projection weights
-        weights = getWeights(window, scheme=scheme)
+        weights = get_weights(window, scheme=scheme)
         
         # loop over teams in Season
         for team in self.teams():
