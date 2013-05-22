@@ -19,26 +19,26 @@ def main():
     cur = con.cursor()
     
     # get all available season names
-    seasonNames = getSeasonNames(cur)
+    season_names = getSeasonNames(cur)
     
     # initialize list to hold all games from all seasons
     game_list = []
     feature_names = ['proj_diff_score', 'diff_streak']
     
     # loop over all seasons
-    for seasonName in seasonNames:
+    for season_name in season_names:
         
-        # get Season for seasonName
-        S = getSeason(cur, seasonName)
+        # get Season for season_name
+        season = getSeason(cur, season_name)
         
         # compute projections for games in season, append to feature list
-        S.get_projections(window=10, location='all', result='all', scheme='constant')
+        season.get_projections(window=10, location='all', result='all', scheme='constant')
         
         # compute streaks for all teams' games, append to feature list
-        S.get_streaks(location='all', result='all')
+        season.get_streaks(location='all', result='all')
         
-        # append all games from S to game_ist
-        game_list += S.all_games(feature_names)
+        # append all games from season to game_ist
+        game_list += season.all_games(feature_names)
         
     # get features dataframe for all games
     features = getFeatures(game_list, feature_names, scale=True)
