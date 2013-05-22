@@ -52,14 +52,14 @@ class Season():
         return self.all[team]
     
     
-    def get_projections(self, N, location='all', result='all', scheme='constant'):
+    def get_projections(self, window, location='all', result='all', scheme='constant'):
         """
         Insert projections into each Game: 
             proj_home_GF, proj_away_GF, proj_home_GA, proj_away_GA, proj_diff_score
-            proj_diff_score= (proj_home_GF+proj_away_GA)/2 - (proj_away_GF+proj_home_GA)/2
+            proj_diff_score = (proj_home_GF+proj_away_GA)/2 - (proj_away_GF+proj_home_GA)/2
             ---> GF=goals for; GA=goals against
         params: 
-                 N: int    | window size for weighting/projections
+            window: int    | window size (number of games) for weighting/projections
           location: string | location of games to include in projections
                              'all', 'home', or 'away' (default='all')
             result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
@@ -76,7 +76,7 @@ class Season():
         assert scheme in ['constant', 'linear'], 'scheme='+str(scheme)
         
         # get the projection weights
-        weights = getWeights(N, scheme=scheme)
+        weights = getWeights(window, scheme=scheme)
         
         # loop over teams in Season
         for team in self.teams():
@@ -100,8 +100,8 @@ class Season():
                     tSopp = self.get_team_season(g.away)
                     
                     # get goals lists for home and away teams
-                    home_GF_list, home_GA_list =    tS.get_goals_lists(N, location=location, result=result, before=date)
-                    away_GF_list, away_GA_list = tSopp.get_goals_lists(N, location=location, result=result, before=date)
+                    home_GF_list, home_GA_list =    tS.get_goals_lists(window, location=location, result=result, before=date)
+                    away_GF_list, away_GA_list = tSopp.get_goals_lists(window, location=location, result=result, before=date)
                 
                 # if current team is away team
                 if team == g.away:
@@ -110,8 +110,8 @@ class Season():
                     tSopp = self.get_team_season(g.home)
                     
                     # get goals lists for home and away teams
-                    away_GF_list, away_GA_list =    tS.get_goals_lists(N, location=location, result=result, before=date)
-                    home_GF_list, home_GA_list = tSopp.get_goals_lists(N, location=location, result=result, before=date)                    
+                    away_GF_list, away_GA_list =    tS.get_goals_lists(window, location=location, result=result, before=date)
+                    home_GF_list, home_GA_list = tSopp.get_goals_lists(window, location=location, result=result, before=date)                    
                 
                 # make sure N prior games were available for both teams
                 if home_GF_list and home_GA_list and away_GF_list and away_GA_list:
@@ -120,7 +120,7 @@ class Season():
                     proj_home_GF, proj_home_GA, proj_away_GF, proj_away_GA = 0.0, 0.0, 0.0, 0.0
                     
                     # loop over window size
-                    for i in range(N):
+                    for i in range(window):
                         
                         # compute the projections
                         proj_home_GF += home_GF_list[i] * weights[i]
