@@ -228,7 +228,7 @@ class TeamSeason():
         
         # get goals for and goals against lists
         goalsForList     = [g.goals_for(self.team)     for g in games]
-        goalsAgainstList = [g.goalsAgainst(self.team) for g in games]
+        goalsAgainstList = [g.goals_against(self.team) for g in games]
         
         # check to see if enough data for N
         if len(goalsForList) < N:

@@ -28,7 +28,7 @@ class Game():
         ended_in_OT()
         ended_in_SO()
         goals_for(team)
-        goalsAgainst(team)
+        goals_against(team)
         dScore()
         numericalResult()
         insertProjections(hGF, hGA, aGF, aGA, pdScore)
@@ -162,19 +162,19 @@ class Game():
         elif team == self.away: return self.agoal
     
         
-    def goalsAgainst(self, team, includeSO=False):
+    def goals_against(self, team, include_SO=False):
         """
         return: int | number of goals against given team
                       (may include SO goals)
         params:
-               team: string | 3-character team name
-          includeSO: bool   | whether SO goals count or not
+                team: string | 3-character team name
+          include_SO: bool   | whether SO goals count or not
         """
         # team must be one of two teams in Game
         assert team in [self.home, self.away], 'team='+str(team)
         
         # do not count SO goals if specified
-        if self.result == 'SO' and not includeSO:
+        if self.result == 'SO' and not include_SO:
             return min(self.hgoal, self.agoal)
         
         # if given team was the home team
