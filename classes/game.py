@@ -11,15 +11,15 @@ class Game():
     """
     Game object
     fields:
-          date: string
-          year: int
-         month: int
-           day: int
-          away: string
-          home: string
-         agoal: int
-         hgoal: int
-        result: string
+            date: string
+            year: int
+           month: int
+             day: int
+            away: string
+            home: string
+      away_goals: int
+      home_goals: int
+          result: string
     methods:
         get_date()
         winner()
@@ -40,16 +40,16 @@ class Game():
         Initialize Game object, record mandatory
         """
         if record:
-            self.date   = str(record[0])
-            self.year   = int(self.date.split('-')[0])
-            self.month  = int(self.date.split('-')[1])
-            self.day    = int(self.date.split('-')[2])
-            self.away   = str(record[1])
-            self.home   = str(record[2])
-            self.agoal  = int(record[3])
-            self.hgoal  = int(record[4])
-            self.result = str(record[5])
-            self.features = {}
+            self.date       = str(record[0])
+            self.year       = int(self.date.split('-')[0])
+            self.month      = int(self.date.split('-')[1])
+            self.day        = int(self.date.split('-')[2])
+            self.away       = str(record[1])
+            self.home       = str(record[2])
+            self.away_goals = int(record[3])
+            self.home_goals = int(record[4])
+            self.result     = str(record[5])
+            self.features   = {}
                         
             #==== created by insert_projections
             # self.proj_home_GF
@@ -74,8 +74,8 @@ class Game():
         s  = self.date              + ' '
         s += self.away              + ' '
         s += self.home              + ' '
-        s += str(self.agoal)        + ' '
-        s += str(self.hgoal)        + ' '
+        s += str(self.away_goals)   + ' '
+        s += str(self.home_goals)   + ' '
         s += str(self.diff_score()) + ' '
         s += self.result            + ' '
         
@@ -112,8 +112,8 @@ class Game():
         
         note: includes SO outcomes
         """
-        if   self.agoal > self.hgoal: return self.away
-        elif self.hgoal > self.agoal: return self.home
+        if   self.away_goals > self.home_goals: return self.away
+        elif self.home_goals > self.away_goals: return self.home
     
     
     def loser(self):
@@ -122,8 +122,8 @@ class Game():
         
         note: includes SO outcomes
         """
-        if   self.agoal > self.hgoal: return self.home
-        elif self.hgoal > self.agoal: return self.away
+        if   self.away_goals > self.home_goals: return self.home
+        elif self.home_goals > self.away_goals: return self.away
     
     
     def ended_in_regulation(self):
@@ -167,13 +167,13 @@ class Game():
         
         # do not count SO goals if specified
         if self.ended_in_SO() and not include_SO:
-            return min(self.hgoal, self.agoal)
+            return min(self.home_goals, self.away_goals)
         
         # if given team was the home team
-        elif team == self.home: return self.hgoal
+        elif team == self.home: return self.home_goals
             
         # if the given team was the away team
-        elif team == self.away: return self.agoal
+        elif team == self.away: return self.away_goals
     
         
     def goals_against(self, team, include_SO=False):
@@ -189,13 +189,13 @@ class Game():
         
         # do not count SO goals if specified
         if self.ended_in_SO() and not include_SO:
-            return min(self.hgoal, self.agoal)
+            return min(self.home_goals, self.away_goals)
         
         # if given team was the home team
-        elif team == self.home: return self.agoal
+        elif team == self.home: return self.away_goals
             
         # if the given team was the away team
-        elif team == self.away: return self.hgoal
+        elif team == self.away: return self.home_goals
     
         
     def diff_score(self, include_SO=False):
@@ -214,7 +214,7 @@ class Game():
         
         # otherwise, return goal differential
         else:
-            return self.hgoal - self.agoal
+            return self.home_goals - self.away_goals
     
     
     def numerical_result(self):
