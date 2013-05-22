@@ -32,7 +32,7 @@ class Game():
         goals_against(team)
         diff_score()
         numerical_result()
-        insert_projections(proj_home_GF, proj_home_GA, prj_away_GF, proj_away_GA, proj_diff_score)
+        insert_projections(proj_home_GF, proj_home_GA, proj_away_GF, proj_away_GA, proj_diff_score)
         insert_streak(streak, location)
     """
     def __init__(self, record=None):
