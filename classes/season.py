@@ -181,19 +181,19 @@ class Season():
                 
                 if team == g.home:
                     # insert streak into Game
-                    g.insertStreak(streak, loc='home')                    
+                    g.insert_streak(streak, location='home')                    
                     # also insert into the copy of the game 
                     # in the opponent's TeamSeason
                     gOpp = self.getTeam(g.away).gameOnDate(g.date)
-                    gOpp.insertStreak(streak, loc='home')
+                    gOpp.insert_streak(streak, location='home')
                     
                 elif team == g.away:
                     # insert streak into Game
-                    g.insertStreak(streak, loc='away')
+                    g.insert_streak(streak, location='away')
                     # also insert into the copy of the game 
                     # in the opponent's TeamSeason
                     gOpp = self.getTeam(g.home).gameOnDate(g.date)
-                    gOpp.insertStreak(streak, loc='away')
+                    gOpp.insert_streak(streak, location='away')
     
     
     def allGames(self, featureList=[]):

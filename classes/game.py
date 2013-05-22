@@ -32,7 +32,7 @@ class Game():
         diff_score()
         numerical_result()
         insert_projections(hGF, hGA, aGF, aGA, pdScore)
-        insertStreak(streak, loc)
+        insert_streak(streak, location)
     """
     def __init__(self, rec=None):
         """
@@ -251,23 +251,23 @@ class Game():
         self.features['proj_diff_score'] = pdScore
     
     
-    def insertStreak(self, streak, loc):
+    def insert_streak(self, streak, location):
         """
         Insert streaks for home or away team
         coming into Game
         
         params:
             streak: int    | streak (pos=winning, neg=losing)
-               loc: string | 'home' or 'away'
+          location: string | 'home' or 'away'
         """
         # location must be either 'home' or 'away'
-        assert loc in ['home', 'away'], 'loc='+str(loc)
+        assert location in ['home', 'away'], 'location='+str(location)
         
         # insert the streak
-        if   loc == 'home':
+        if location == 'home':
             self.hstreak = streak
             self.features['home_streak'] = streak
-        elif loc == 'away':
+        elif location == 'away':
             self.astreak = streak
             self.features['away_streak'] = streak
         
