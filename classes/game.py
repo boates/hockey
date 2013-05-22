@@ -140,6 +140,13 @@ class Game():
         return self.result == 'SO'
     
     
+    def has_team(self, team):
+        """
+        return: bool | whether the team is home or away
+        """
+        return team in [self.home, self.away]
+    
+    
     def goals_for(self, team, include_SO=False):
         """
         return: int | number of goals for given team
@@ -149,7 +156,7 @@ class Game():
           include_SO: bool   | whether SO goals count or not
         """
         # team must be one of two teams in Game
-        assert team in [self.home, self.away], 'team='+str(team)
+        assert self.has_team(team), 'team='+str(team)
         
         # do not count SO goals if specified
         if self.ended_in_SO() and not include_SO:
@@ -171,7 +178,7 @@ class Game():
           include_SO: bool   | whether SO goals count or not
         """
         # team must be one of two teams in Game
-        assert team in [self.home, self.away], 'team='+str(team)
+        assert self.has_team(team), 'team='+str(team)
         
         # do not count SO goals if specified
         if self.ended_in_SO() and not include_SO:
