@@ -64,13 +64,13 @@ class Game():
         Print functionality
         """
         # build the return string piece by piece
-        s  = self.date          + ' '
-        s += self.away          + ' '
-        s += self.home          + ' '
-        s += str(self.agoal)    + ' '
-        s += str(self.hgoal)    + ' '
+        s  = self.date              + ' '
+        s += self.away              + ' '
+        s += self.home              + ' '
+        s += str(self.agoal)        + ' '
+        s += str(self.hgoal)        + ' '
         s += str(self.diff_score()) + ' '
-        s += self.result        + ' '
+        s += self.result            + ' '
         
         # include projections if available
         try:
@@ -152,7 +152,7 @@ class Game():
         assert team in [self.home, self.away], 'team='+str(team)
         
         # do not count SO goals if specified
-        if self.result == 'SO' and not include_SO:
+        if self.ended_in_SO() and not include_SO:
             return min(self.hgoal, self.agoal)
         
         # if given team was the home team
@@ -174,7 +174,7 @@ class Game():
         assert team in [self.home, self.away], 'team='+str(team)
         
         # do not count SO goals if specified
-        if self.result == 'SO' and not include_SO:
+        if self.ended_in_SO() and not include_SO:
             return min(self.hgoal, self.agoal)
         
         # if given team was the home team
@@ -195,7 +195,7 @@ class Game():
             include_SO: bool | whether SO goals count or not
         """
         # return 0 in the case of a shootout unless otherwise specified
-        if self.result == 'SO' and not include_SO:
+        if self.ended_in_SO() and not include_SO:
             return 0
         
         # otherwise, return goal differential
@@ -210,8 +210,8 @@ class Game():
                     |   0: away win / home loss (including OT)
                     |   1: SO
         """
-        # reutnr 1 for SO
-        if self.result == 'SO': return 1
+        # return 1 for SO
+        if self.ended_in_SO(): return 1
         
         #====================================================#
         # right now all regulation games are classified as 0 #
