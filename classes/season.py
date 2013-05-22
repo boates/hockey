@@ -19,8 +19,8 @@ class Season():
         insert(teamSeason)
         teams()
         get_team_season(team)
-        get_projections(N, loc, result, scheme)
-        get_streaks(loc, result)
+        get_projections(N, location, result, scheme)
+        get_streaks(location, result)
         allGames()
     """
     def __init__(self, season='None'):
@@ -135,12 +135,12 @@ class Season():
                     g.insert_projections(proj_home_GF, proj_home_GA, proj_away_GF, proj_away_GA, proj_diff_score)
     
     
-    def get_streaks(self, loc='all', result='all'):
+    def get_streaks(self, location='all', result='all'):
         """
         params:
-           loc: string | location of games to include in projections
-                         'all', 'home', or 'away' (default='all')
-        result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+          location: string | location of games to include in projections
+                             'all', 'home', or 'away' (default='all')
+            result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
         """
         # loop over all teams in season
         for team in self.teams():
@@ -149,7 +149,7 @@ class Season():
             tS = self.get_team_season(team)
             
             # get all prior games for team
-            games = tS.get_games(location=loc, result=result)
+            games = tS.get_games(location=location, result=result)
             
             # loop through team's games
             for i, g in enumerate(games):

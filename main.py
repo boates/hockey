@@ -35,7 +35,7 @@ def main():
         S.get_projections(window=10, location='all', result='all', scheme='constant')
         
         # compute streaks for all teams' games, append to feature list
-        S.get_streaks(loc='all', result='all')
+        S.get_streaks(location='all', result='all')
         
         # append all games from S to gameList
         gameList += S.allGames(featureList)
