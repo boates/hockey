@@ -32,7 +32,7 @@ class Game():
         goals_against(team)
         diff_score()
         numerical_result()
-        insert_projections(hGF, hGA, aGF, aGA, pdScore)
+        insert_projections(proj_home_GF, proj_home_GA, prj_away_GF, proj_away_GA, proj_diff_score)
         insert_streak(streak, location)
     """
     def __init__(self, rec=None):
@@ -231,32 +231,32 @@ class Game():
         elif self.away == self.winner(): return 0
     
     
-    def insert_projections(self, phGF, phGA, paGF, paGA, pdScore):
+    def insert_projections(self, proj_home_GF, proj_home_GA, proj_away_GF, proj_away_GA, proj_diff_score):
         """
         Insert projected scores into Game
         
         params:
-             phGF: float | projected GF for home team
-             phGA: float | projected GA for home team
-             paGF: float | projected GF for away team
-             paGA: float | projected GA for away team
-          pdScore: float | projected score differential
+             proj_home_GF: float | projected GF for home team
+             proj_home_GA: float | projected GA for home team
+             proj_away_GF: float | projected GF for away team
+             proj_away_GA: float | projected GA for away team
+          proj_diff_score: float | projected score differential
         """
         # set member variables
-        self.phGF    = phGF
-        self.phGA    = phGA
-        self.paGF    = paGF
-        self.paGA    = paGA
-        self.pdScore = pdScore
+        self.proj_home_GF    = proj_home_GF
+        self.proj_home_GA    = proj_home_GA
+        self.proj_away_GF    = proj_away_GF
+        self.proj_away_GA    = proj_away_GA
+        self.proj_diff_score = proj_diff_score
         
         # add projected goals for / against to features dict
-        self.features['proj_home_GF'] = phGF
-        self.features['proj_home_GA'] = phGA
-        self.features['proj_away_GF'] = paGF
-        self.features['proj_away_GA'] = paGA
+        self.features['proj_home_GF'] = proj_home_GF
+        self.features['proj_home_GA'] = proj_home_GA
+        self.features['proj_away_GF'] = proj_away_GF
+        self.features['proj_away_GA'] = proj_away_GA
         
         # add projected score differntial to features dict
-        self.features['proj_diff_score'] = pdScore
+        self.features['proj_diff_score'] = proj_diff_score
     
     
     def insert_streak(self, streak, location):
