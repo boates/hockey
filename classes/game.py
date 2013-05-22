@@ -29,7 +29,7 @@ class Game():
         ended_in_SO()
         goals_for(team)
         goals_against(team)
-        dScore()
+        diff_score()
         numericalResult()
         insertProjections(hGF, hGA, aGF, aGA, pdScore)
         insertStreak(streak, loc)
@@ -69,7 +69,7 @@ class Game():
         s += self.home          + ' '
         s += str(self.agoal)    + ' '
         s += str(self.hgoal)    + ' '
-        s += str(self.dScore()) + ' '
+        s += str(self.diff_score()) + ' '
         s += self.result        + ' '
         
         # include projections if available
@@ -184,7 +184,7 @@ class Game():
         elif team == self.away: return self.hgoal
     
         
-    def dScore(self, includeSO=False):
+    def diff_score(self, include_SO=False):
         """
         return: int | score differential for game
                     | computed as ghome - gaway so that pos/neg
@@ -192,10 +192,10 @@ class Game():
                     | return 0 if game went to SO unless
                     | otherwise specified
         params:
-            includeSO: bool | whether SO goals count or not
+            include_SO: bool | whether SO goals count or not
         """
         # return 0 in the case of a shootout unless otherwise specified
-        if self.result == 'SO' and not includeSO:
+        if self.result == 'SO' and not include_SO:
             return 0
         
         # otherwise, return goal differential

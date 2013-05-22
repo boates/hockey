@@ -98,7 +98,7 @@ def getFeatures(gameList, featureList, scale=True):
             game_features.append( g.features[f] )
         
         # set the target metric (1 for SO, 0 for anything else)
-        result = int(g.dScore() == 0)
+        result = int(g.diff_score() == 0)
         
         # append the result as the final Game feature
         game_features.append(result)
