@@ -20,7 +20,7 @@ class Season():
         teams()
         get_team_season(team)
         get_projections(N, loc, result, scheme)
-        getStreaks(loc, result)
+        get_streaks(loc, result)
         allGames()
     """
     def __init__(self, season='None'):
@@ -135,7 +135,7 @@ class Season():
                     g.insert_projections(proj_home_GF, proj_home_GA, proj_away_GF, proj_away_GA, proj_diff_score)
     
     
-    def getStreaks(self, loc='all', result='all'):
+    def get_streaks(self, loc='all', result='all'):
         """
         params:
            loc: string | location of games to include in projections
