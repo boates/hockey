@@ -202,11 +202,11 @@ class Season():
                     opponent_game.insert_streak(streak, location='away')
     
     
-    def all_games(self, featureList=[]):
+    def all_games(self, feature_names=[]):
         """
         return: chronological list of all games
         params:
-            featureList: list[string] | list of feature names
+            feature_names: list[string] | list of feature names
         """
         # initialize list to hold all games
         game_list = []
@@ -218,11 +218,11 @@ class Season():
             team_season = self.get_team_season(team)
             
             # if specific features requested
-            if featureList:
+            if feature_names:
                 # consider only home games to avoid duplicates
                 g_list = team_season.get_games(location='home')
                 # append only games with all features
-                game_list += [g for g in g_list if not [f for f in featureList if f not in g.features]]
+                game_list += [g for g in g_list if not [f for f in feature_names if f not in g.features]]
             
             # if features not specified
             else:

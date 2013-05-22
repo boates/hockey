@@ -23,7 +23,7 @@ def main():
     
     # initialize list to hold all games from all seasons
     gameList = []
-    featureList = ['proj_diff_score', 'diff_streak']
+    feature_names = ['proj_diff_score', 'diff_streak']
     
     # loop over all seasons
     for seasonName in seasonNames:
@@ -38,10 +38,10 @@ def main():
         S.get_streaks(location='all', result='all')
         
         # append all games from S to gameList
-        gameList += S.all_games(featureList)
+        gameList += S.all_games(feature_names)
         
     # get features dataframe for all games
-    features = getFeatures(gameList, featureList, scale=True)
+    features = getFeatures(gameList, feature_names, scale=True)
     
     print features.tail(100)
     
