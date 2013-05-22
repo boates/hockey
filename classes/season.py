@@ -21,7 +21,7 @@ class Season():
         get_team_season(team)
         get_projections(N, location, result, scheme)
         get_streaks(location, result)
-        allGames()
+        all_games()
     """
     def __init__(self, season='None'):
         """
@@ -202,7 +202,7 @@ class Season():
                     opponent_game.insert_streak(streak, location='away')
     
     
-    def allGames(self, featureList=[]):
+    def all_games(self, featureList=[]):
         """
         return: chronological list of all games
         params:

@@ -38,7 +38,7 @@ def main():
         S.get_streaks(location='all', result='all')
         
         # append all games from S to gameList
-        gameList += S.allGames(featureList)
+        gameList += S.all_games(featureList)
         
     # get features dataframe for all games
     features = getFeatures(gameList, featureList, scale=True)
