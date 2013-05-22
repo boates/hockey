@@ -17,7 +17,7 @@ class TeamSeason():
     methods:
        insert()
        game_on_date(date)
-       getGames(loc, result, before, after)
+       get_games(loc, result, before, after)
        nGames(loc, result, before, after)
        getGoalsLists(N, loc, result, before)
     """
@@ -66,7 +66,7 @@ class TeamSeason():
             raise IndexError('no Game found on '+date)
     
     
-    def getGames(self, loc='all', result='all', before=None, after=None):
+    def get_games(self, loc='all', result='all', before=None, after=None):
         """
         return: list[Game] | list of games for team
                              in TeamSeason
@@ -198,7 +198,7 @@ class TeamSeason():
         assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
         
         # retrieve appropriate selection of games
-        selection = self.getGames(loc=loc, result=result, before=before, after=after)
+        selection = self.get_games(loc=loc, result=result, before=before, after=after)
         
         return len( selection )
     
@@ -224,7 +224,7 @@ class TeamSeason():
         assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+str(result)
         
         # get all games with given location and result before given date
-        games = self.getGames(loc=loc, result=result, before=before)
+        games = self.get_games(loc=loc, result=result, before=before)
         
         # get goals for and goals against lists
         goalsForList     = [g.goals_for(self.team)     for g in games]

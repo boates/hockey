@@ -85,7 +85,7 @@ class Season():
             tS = self.getTeam(team)
             
             # get selection of only all games (prone to double counting)
-            games = tS.getGames(loc='all', result=result)
+            games = tS.get_games(loc='all', result=result)
             
             # loop over team's games
             for g in games:
@@ -149,7 +149,7 @@ class Season():
             tS = self.getTeam(team)
             
             # get all prior games for team
-            games = tS.getGames(loc=loc, result=result)
+            games = tS.get_games(loc=loc, result=result)
             
             # loop through team's games
             for i, g in enumerate(games):
@@ -214,14 +214,14 @@ class Season():
             # if specific features requested
             if featureList:
                 # consider only home games to avoid duplicates
-                gList = tS.getGames(loc='home')
+                gList = tS.get_games(loc='home')
                 # append only games with all features
                 gameList += [g for g in gList if not [f for f in featureList if f not in g.features]]
             
             # if features not specified
             else:
                 # only append team's home games (avoids duplicates)
-                gameList += tS.getGames(loc='home')
+                gameList += tS.get_games(loc='home')
             
         # sort the gameList by date
         gameList = sorted(gameList, key=Game.get_date)
