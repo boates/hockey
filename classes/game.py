@@ -261,8 +261,7 @@ class Game():
     
     def insert_streak(self, streak, location):
         """
-        Insert streaks for home or away team
-        coming into Game
+        Insert streaks for home or away team coming into Game
         
         params:
             streak: int    | streak (pos=winning, neg=losing)
@@ -273,16 +272,16 @@ class Game():
         
         # insert the streak
         if location == 'home':
-            self.hstreak = streak
+            self.home_streak = streak
             self.features['home_streak'] = streak
         elif location == 'away':
-            self.astreak = streak
+            self.away_streak = streak
             self.features['away_streak'] = streak
         
         # if both home and away streaks are available
         # put the difference into the features dict
         try:
-            self.features['diff_streak'] = self.hstreak - self.astreak
+            self.features['diff_streak'] = self.home_streak - self.away_streak
         except AttributeError:
             pass
     
