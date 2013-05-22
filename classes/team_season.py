@@ -19,7 +19,7 @@ class TeamSeason():
        game_on_date(date)
        get_games(location, result, before, after)
        num_games(location, result, before, after)
-       get_goals_lists(N, loc, result, before)
+       get_goals_lists(N, location, result, before)
     """
     def __init__(self, season='None', team='None'):
         """
@@ -107,45 +107,45 @@ class TeamSeason():
         elif location == 'home':
             
             # select all home games
-            homeGames = [g for g in self.games if self.team == g.home]
+            home_games = [g for g in self.games if self.team == g.home]
             
             # consider home games between two dates
             if before and after:
-                selection = [g for g in homeGames if before < g.date < after]
+                selection = [g for g in home_games if before < g.date < after]
              
             # consider only home games before given date
             elif before:
-                selection = [g for g in homeGames if g.date < before]
+                selection = [g for g in home_games if g.date < before]
             
             # consider only home games after given date
             elif after:
-                selection = [g for g in homeGames if g.date > after]
+                selection = [g for g in home_games if g.date > after]
                 
             # consider all home games
             else:
-                selection = homeGames
+                selection = home_games
                 
         # consider only away games
         elif location == 'away':
             
             # select all away games
-            awayGames = [g for g in self.games if self.team == g.away]
+            away_games = [g for g in self.games if self.team == g.away]
             
             # consider away games between two dates
             if before and after:
-                selection = [g for g in awayGames if before < g.date < after]
+                selection = [g for g in away_games if before < g.date < after]
             
             # consider only away games before given date
             if before:
-                selection = [g for g in awayGames if g.date < before]
+                selection = [g for g in away_games if g.date < before]
             
             # consider only away games after given date
             if after:
-                selection = [g for g in awayGames if g.date > after]
+                selection = [g for g in away_games if g.date > after]
                 
             # consider all away games
             else: 
-                selection = awayGames
+                selection = away_games
         
         #====================================#
         # now have "selection" of games      #
@@ -166,20 +166,20 @@ class TeamSeason():
         
         # consider only games that ended in regulation from selection
         elif result == 'R':
-            return [g for g in selection if g.result == 'R']
+            return [g for g in selection if g.ended_in_regulation()]
         
         # consider only games that ended not in regulation from selection
         # i.e. all OT and SO games
         elif result == 'notR':
-            return [g for g in selection if g.result != 'R']
+            return [g for g in selection if not g.ended_in_regulation()]
         
         # consider only games that ended in OT from selection
         elif result == 'OT':
-            return [g for g in selection if g.result == 'OT']
+            return [g for g in selection if g.ended_in_OT()]
             
         # consider only games that ended in SO from selection
         elif result == 'SO':
-            return [g for g in selection if g.result == 'SO']
+            return [g for g in selection if g.ended_in_SO()]
     
     
     def num_games(self, location='all', result='all', before=None, after=None):
