@@ -16,7 +16,7 @@ class TeamSeason():
        games:  list[Game]
     methods:
        insert()
-       gameOnDate(date)
+       game_on_date(date)
        getGames(loc, result, before, after)
        nGames(loc, result, before, after)
        getGoalsLists(N, loc, result, before)
@@ -48,7 +48,7 @@ class TeamSeason():
         self.games.append(g)
     
     
-    def gameOnDate(self, date):
+    def game_on_date(self, date):
         """
         return: Game played on date (if exists)
         params:
