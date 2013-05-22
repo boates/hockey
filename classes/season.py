@@ -55,9 +55,9 @@ class Season():
     def get_projections(self, N, location='all', result='all', scheme='constant'):
         """
         Insert projections into each Game: 
-            hGF, aGF, hGA, aGA, pdScore
-            h/a=home/away, GF/GA=goals for/against
-            pdScore= (phGF+paGA)/2 - (paGF+phGA)/2
+            proj_home_GF, proj_away_GF, proj_home_GA, proj_away_GA, proj_diff_score
+            proj_diff_score= (proj_home_GF+proj_away_GA)/2 - (proj_away_GF+proj_home_GA)/2
+            ---> GF=goals for; GA=goals against
         params: 
                  N: int    | window size for weighting/projections
           location: string | location of games to include in projections
@@ -100,8 +100,8 @@ class Season():
                     tSopp = self.get_team_season(g.away)
                     
                     # get goals lists for home and away teams
-                    phGFlist, phGAlist =    tS.get_goals_lists(N, location=location, result=result, before=date)
-                    paGFlist, paGAlist = tSopp.get_goals_lists(N, location=location, result=result, before=date)
+                    home_GF_list, home_GA_list =    tS.get_goals_lists(N, location=location, result=result, before=date)
+                    away_GF_list, away_GA_list = tSopp.get_goals_lists(N, location=location, result=result, before=date)
                 
                 # if current team is away team
                 if team == g.away:
@@ -110,29 +110,29 @@ class Season():
                     tSopp = self.get_team_season(g.home)
                     
                     # get goals lists for home and away teams
-                    paGFlist, paGAlist =    tS.get_goals_lists(N, location=location, result=result, before=date)
-                    phGFlist, phGAlist = tSopp.get_goals_lists(N, location=location, result=result, before=date)                    
+                    away_GF_list, away_GA_list =    tS.get_goals_lists(N, location=location, result=result, before=date)
+                    home_GF_list, home_GA_list = tSopp.get_goals_lists(N, location=location, result=result, before=date)                    
                 
                 # make sure N prior games were available for both teams
-                if phGFlist and phGAlist and paGFlist and paGAlist:
+                if home_GF_list and home_GA_list and away_GF_list and away_GA_list:
                     
                     # initialize projection variables
-                    phGF, phGA, paGF, paGA = 0.0, 0.0, 0.0, 0.0
+                    proj_home_GF, proj_home_GA, proj_away_GF, proj_away_GA = 0.0, 0.0, 0.0, 0.0
                     
                     # loop over window size
                     for i in range(N):
                         
                         # compute the projections
-                        phGF += phGFlist[i] * weights[i]
-                        phGA += phGAlist[i] * weights[i]
-                        paGF += paGFlist[i] * weights[i]
-                        paGA += paGAlist[i] * weights[i]
+                        proj_home_GF += home_GF_list[i] * weights[i]
+                        proj_home_GA += home_GA_list[i] * weights[i]
+                        proj_away_GF += away_GF_list[i] * weights[i]
+                        proj_away_GA += away_GA_list[i] * weights[i]
                         
                     # compute the projected score differential
-                    pdScore = (phGF+paGA)/2.0 - (paGF+phGA)/2.0
+                    proj_diff_score = (proj_home_GF+proj_away_GA)/2.0 - (proj_away_GF+proj_home_GA)/2.0
                     
                     # add projected data to the Game object
-                    g.insert_projections(phGF, phGA, paGF, paGA, pdScore)
+                    g.insert_projections(proj_home_GF, proj_home_GA, proj_away_GF, proj_away_GA, proj_diff_score)
     
     
     def getStreaks(self, loc='all', result='all'):
