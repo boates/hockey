@@ -18,7 +18,7 @@ class TeamSeason():
        insert()
        game_on_date(date)
        get_games(location, result, before, after)
-       nGames(loc, result, before, after)
+       num_games(location, result, before, after)
        getGoalsLists(N, loc, result, before)
     """
     def __init__(self, season='None', team='None'):
@@ -35,7 +35,7 @@ class TeamSeason():
         Print functionality
         """
         s  = 'team = '+str(self.team)+'; '
-        s += str(self.nGames())+' games\n'
+        s += str(self.num_games())+' games\n'
         for g in self.games:
             s += g.__repr__() + '\n'
         return s
@@ -182,23 +182,23 @@ class TeamSeason():
             return [g for g in selection if g.result == 'SO']
     
     
-    def nGames(self, loc='all', result='all', before=None, after=None):
+    def num_games(self, location='all', result='all', before=None, after=None):
         """
         return: int | number of games in season object
                       for location as all, home, or away
         params:
-              loc: string | 'all', 'home', or 'away'
-           result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
-           before: string | cut-off date to consider games before
-                            (e.g. '2010-10-31')
-            after: string | cut-off date to consider games before
-                            (e.g. '2010-10-31')
+          location: string | 'all', 'home', or 'away'
+            result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+            before: string | cut-off date to consider games before
+                             (e.g. '2010-10-31')
+             after: string | cut-off date to consider games before
+                             (e.g. '2010-10-31')
         """
-        # loc can only be 'all', 'home' or 'away'
-        assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
+        # location can only be 'all', 'home' or 'away'
+        assert location in ['all', 'home', 'away'], 'location='+str(location)
         
         # retrieve appropriate selection of games
-        selection = self.get_games(location=loc, result=result, before=before, after=after)
+        selection = self.get_games(location=location, result=result, before=before, after=after)
         
         return len( selection )
     
