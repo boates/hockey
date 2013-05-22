@@ -28,19 +28,19 @@ class Season():
         Initialize Season object
         """
         self.season = season
-        self.all = {}
+        self.all    = {}
     
     
-    def insert(self, teamSeason):
+    def insert(self, team_season):
         """
         Insert TeamSeason object into Season
         """
-        self.all[teamSeason.team] = teamSeason
+        self.all[team_season.team] = team_season
     
     
     def teams(self):
         """
-        return: list of teams present in Season
+        return: sorted list of teams present in Season
         """
         return sorted( self.all.keys() )
     

@@ -26,8 +26,8 @@ class TeamSeason():
         Initialize TeamSeason object
         """
         self.season = season
-        self.team = team
-        self.games = []
+        self.team   = team
+        self.games  = []
     
     
     def __repr__(self):
