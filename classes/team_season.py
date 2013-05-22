@@ -68,8 +68,8 @@ class TeamSeason():
     
     def get_games(self, location='all', result='all', before=None, after=None):
         """
-        return: list[Game] | list of games for team
-                             in TeamSeason
+        return: list[Game] | list of games for team in TeamSeason
+        
         params:
           location: string | 'all', 'home', or 'away'
             result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
