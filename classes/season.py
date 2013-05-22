@@ -142,6 +142,12 @@ class Season():
                              'all', 'home', or 'away' (default='all')
             result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
         """
+        # location must be all, home, or away
+        assert location in ['all', 'home', 'away'], 'location='+str(location)
+        
+        # result must be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+        assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+str(result)
+        
         # loop over all teams in season
         for team in self.teams():
             
