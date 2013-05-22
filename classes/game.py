@@ -24,6 +24,9 @@ class Game():
         getDate()
         winner()
         loser()
+        ended_in_regulation()
+        ended_in_OT()
+        ended_in_SO()
         goalsFor(team)
         goalsAgainst(team)
         dScore()
@@ -114,6 +117,26 @@ class Game():
         """
         if   self.agoal > self.hgoal: return self.home
         elif self.hgoal > self.agoal: return self.away
+    
+    def ended_in_regulation(self):
+        """
+        return: bool | whether the game ended in regulation or not
+        """
+        return self.result == 'R'
+    
+    
+    def ended_in_OT(self):
+        """
+        return: bool | whether the game ended in OT or not
+        """
+        return self.result == 'OT'
+    
+    
+    def ended_in_SO(self):
+        """
+        return: bool | whether the game ended in a SO or not
+        """
+        return self.result == 'SO'
     
     
     def goalsFor(self, team, includeSO=False):
