@@ -100,8 +100,8 @@ class Season():
                     tSopp = self.getTeam(g.away)
                     
                     # get goals lists for home and away teams
-                    phGFlist, phGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
-                    paGFlist, paGAlist = tSopp.getGoalsLists(N, loc=loc, result=result, before=date)
+                    phGFlist, phGAlist =    tS.get_goals_lists(N, location=loc, result=result, before=date)
+                    paGFlist, paGAlist = tSopp.get_goals_lists(N, location=loc, result=result, before=date)
                 
                 # if current team is away team
                 if team == g.away:
@@ -110,8 +110,8 @@ class Season():
                     tSopp = self.getTeam(g.home)
                     
                     # get goals lists for home and away teams
-                    paGFlist, paGAlist =    tS.getGoalsLists(N, loc=loc, result=result, before=date)
-                    phGFlist, phGAlist = tSopp.getGoalsLists(N, loc=loc, result=result, before=date)                    
+                    paGFlist, paGAlist =    tS.get_goals_lists(N, location=loc, result=result, before=date)
+                    phGFlist, phGAlist = tSopp.get_goals_lists(N, location=loc, result=result, before=date)                    
                 
                 # make sure N prior games were available for both teams
                 if phGFlist and phGAlist and paGFlist and paGAlist:

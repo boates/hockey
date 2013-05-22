@@ -19,7 +19,7 @@ class TeamSeason():
        game_on_date(date)
        get_games(location, result, before, after)
        num_games(location, result, before, after)
-       getGoalsLists(N, loc, result, before)
+       get_goals_lists(N, loc, result, before)
     """
     def __init__(self, season='None', team='None'):
         """
@@ -203,40 +203,40 @@ class TeamSeason():
         return len( selection )
     
     
-    def getGoalsLists(self, N, loc='all', result='all', before=None):
+    def get_goals_lists(self, N, location='all', result='all', before=None):
         """
         Compute the total number of "goals for" for 
         the team, given location as all, home, or away
         
-        return: goalsForList, goalsAgainstList | list[int], list[int]
+        return: goals_for_list, goals_against_list | list[int], list[int]
                 ---> total goals for/against for date and result selection
         params:
-                N: int    | number of previous games to consider for total
-                            if N > current games in season, return -1
-              loc: string | 'all', 'home', or 'away' (default='all')
-           result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
-           before: string | date string e.g. '2010-01-31'
+                 N: int    | number of previous games to consider for total
+                             if N > current games in season, return -1
+          location: string | 'all', 'home', or 'away' (default='all')
+            result: string | 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
+            before: string | date string e.g. '2010-01-31'
         """
-        # loc can only be 'all', 'home' or 'away'
-        assert loc in ['all', 'home', 'away'], 'loc='+str(loc)
+        # location can only be 'all', 'home' or 'away'
+        assert location in ['all', 'home', 'away'], 'location='+str(location)
         
         # result can only be 'all', 'wins', 'losses', 'R', 'notR', 'OT', or 'SO'
         assert result in ['all', 'wins', 'losses', 'R', 'notR', 'OT', 'SO'], 'result='+str(result)
         
         # get all games with given location and result before given date
-        games = self.get_games(location=loc, result=result, before=before)
+        games = self.get_games(location=location, result=result, before=before)
         
         # get goals for and goals against lists
-        goalsForList     = [g.goals_for(self.team)     for g in games]
-        goalsAgainstList = [g.goals_against(self.team) for g in games]
+        goals_for_list     = [g.goals_for(self.team)     for g in games]
+        goals_against_list = [g.goals_against(self.team) for g in games]
         
         # check to see if enough data for N
-        if len(goalsForList) < N:
+        if len(goals_for_list) < N:
             # if not, return empty lists
             return [], []
         
-        # otherwise there are engouh games
+        # otherwise there are enough games
         else:
             # return the previous N games
-            return goalsForList[-N:], goalsAgainstList[-N:]
+            return goals_for_list[-N:], goals_against_list[-N:]
     
