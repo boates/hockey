@@ -41,7 +41,7 @@ def main():
         game_list += season.all_games(feature_names)
         
     # get features dataframe for all games
-    features = getFeatures(game_list, feature_names, scale=True)
+    features = get_features(game_list, feature_names, scale=True)
     
     print features.tail(100)
     
