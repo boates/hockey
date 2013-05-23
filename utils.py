@@ -38,7 +38,7 @@ def get_weights(N, scheme='constant'):
     return weights
 
 
-def scaleFeature(f):
+def scale_feature(feature):
     """
     Feature scaling for individual features
     by subtracting mean and dividing by range
@@ -48,15 +48,15 @@ def scaleFeature(f):
             list[float] | feature to be scaled
     """
     # compute the mean
-    m = sum(f) / float(len(f))
+    mean = sum(feature) / float(len(feature))
     
     # get the max-min distance
-    d = float(max(f) - min(f))
+    distance = float(max(feature) - min(feature))
     
     # scale the feature
-    scaledFeature = [(x-m)/d for x in f]
+    scaled_feature = [(x-mean)/distance for x in feature]
     
-    return scaledFeature
+    return scaled_feature
 
 
 def scaleFeatures(features, featureList):
@@ -69,7 +69,7 @@ def scaleFeatures(features, featureList):
     """
     # scale each feature
     for f in featureList:
-        features[f] = scaleFeature(features[f].values)
+        features[f] = scale_feature(features[f].values)
     return features
 
 
