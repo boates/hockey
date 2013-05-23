@@ -16,10 +16,10 @@ def get_weights(N, scheme='constant'):
                         options are 'constant' or 'linear'
     """
     # make sure N is valid
-    assert N >= 1, 'N must be >= 1; N='+str(N)
+    assert N >= 1, 'number of weights must be >= 1; given N='+str(N)
     
     # make sure scale is valid
-    assert scheme in ['constant', 'linear'], 'scale='+str(scale)
+    assert scheme in ['constant', 'linear'], 'invalid scale='+str(scale)
     
     # constant weighting
     if scheme == 'constant':
@@ -29,11 +29,11 @@ def get_weights(N, scheme='constant'):
     # linear weighting
     elif scheme == 'linear':
         # get a linear scale
-        tmp    = range(1,N+1)
+        values = range(1,N+1)
         # compute the sum for normaization
-        tmpSum = float(sum(tmp))
+        sum_values = float(sum(values))
         # compute normalized weights (sum to 1)
-        weights = [x/tmpSum for x in tmp]
+        weights = [v/sum_values for v in values]
         
     return weights
 
