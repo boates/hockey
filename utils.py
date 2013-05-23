@@ -59,16 +59,16 @@ def scale_feature(feature):
     return scaled_feature
 
 
-def scaleFeatures(features, featureList):
+def scale_features(features, feature_names):
     """
     return: dataframe | scaled features dataframe
     
     params:
-         features: dataframe    | original unscaled features
-      featureList: list[string] | list of features to scale
+           features: dataframe    | original unscaled features
+      feature_names: list[string] | list of features to scale
     """
     # scale each feature
-    for f in featureList:
+    for f in feature_names:
         features[f] = scale_feature(features[f].values)
     return features
 
@@ -111,7 +111,7 @@ def getFeatures(gameList, featureList, scale=True):
     
     # feature scaling if requested
     if scale:
-        features = scaleFeatures(features, featureList)
+        features = scale_features(features, featureList)
     
     return features
 
