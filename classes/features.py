@@ -22,8 +22,12 @@ class Features(DataFrame):
     methods:
         feature_names()
         num_features()
+        get_feature(feature_name, as_values=False)
+        get_features(feature_names, as_values=False)
         add_feature(feature_name, feature_array)
         add_features(feature_names, feature_arrays)
+        scale_feature(feature_name)
+        scale_features(feature_names)
     """
     def feature_names(self):
         """
@@ -100,6 +104,7 @@ class Features(DataFrame):
             feature_name: string | name of feature to be scaled
         """
         pass
+    
     
     def scale_features(self, feature_names):
         """
