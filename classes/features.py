@@ -22,6 +22,7 @@ class Features(DataFrame):
     methods:
         feature_names()
         num_features()
+        num_examples()
         get_feature(feature_name, as_values=False)
         get_features(feature_names, as_values=False)
         add_feature(feature_name, feature_array)
@@ -30,6 +31,8 @@ class Features(DataFrame):
         delete_features(feature_names)
         scale_feature(feature_name)
         scale_features(feature_names)
+        has_feature(feature_name)
+        has_features(feature_names)
     """
     def feature_names(self):
         """
@@ -43,6 +46,13 @@ class Features(DataFrame):
         return: int | number of features in Feature object
         """
         return len(self.columns)
+    
+    
+    def num_examples(self):
+        """
+        return: int | number of examples in Features object
+        """
+        return len(self)
     
     
     def get_feature(self, feature_name, as_values=False):
@@ -171,10 +181,10 @@ class Features(DataFrame):
         params:
             feature_names: list[string] | features to check for
         """
-        return [f for f in feature_names if f not in self.feature_names()] == []
+        return all(f in self.feature_names() for f in feature_names)
     
     
-    
+    # slicing functions?
     
     
     
