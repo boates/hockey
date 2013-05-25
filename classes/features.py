@@ -99,6 +99,27 @@ class Features(DataFrame):
             self.add_feature(feature_name, features_array[i])
     
     
+    def delete_feature(self, feature_name):
+        """
+        Remove feature column from Features object
+        
+        params:
+            feature_name: string | feature to delete
+        """
+        deleted_feature = self.pop(feature_name)
+    
+    
+    def delete_features(self, feature_names):
+        """
+        Remove set of given features from Features object
+        
+        params:
+            feature_names: list[string] | features to delete
+        """
+        for feature_name in feature_names:
+            self.delete_feature(feature_name)
+    
+    
     def scale_feature(self, feature_name):
         """
         Scale the feature given by feature_name
