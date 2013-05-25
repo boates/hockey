@@ -26,6 +26,8 @@ class Features(DataFrame):
         get_features(feature_names, as_values=False)
         add_feature(feature_name, feature_array)
         add_features(feature_names, feature_arrays)
+        delete_feature(feature_name)
+        delete_features(feature_names)
         scale_feature(feature_name)
         scale_features(feature_names)
     """
