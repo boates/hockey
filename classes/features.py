@@ -51,6 +51,7 @@ class Features(DataFrame):
         
         params:
             feature_name: string | feature to get
+            as_values: bool         | return as np.array or not
         """
         if as_values:
             return self.get(feature_name).values
@@ -65,7 +66,8 @@ class Features(DataFrame):
                 np.array         | 2D array of features data
         
         params:
-            feature_names: list[string] | list of features to get
+           feature_names: list[string] | list of features to get
+               as_values: bool         | return as np.array or not
         """
         if as_values:
             return self.get(feature_names).values
@@ -99,11 +101,17 @@ class Features(DataFrame):
     def scale_feature(self, feature_name):
         """
         Scale the feature given by feature_name
+        Note: this changes the feature in self explicitly
         
         params:
             feature_name: string | name of feature to be scaled
         """
-        pass
+        feature = self.get_feature(feature_name)
+        
+        mean = np.mean(feature)
+        span = (max(feature) - min(feature))/2.0
+        
+        something = (feature - mean) / span
     
     
     def scale_features(self, feature_names):
