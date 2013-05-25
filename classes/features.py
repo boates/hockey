@@ -50,8 +50,8 @@ class Features(DataFrame):
                 np.array      | 1D array of feature data
         
         params:
-            feature_name: string | feature to get
-            as_values: bool         | return as np.array or not
+           feature_name: string | feature to get
+              as_values: bool         | return as np.array or not
         """
         if as_values:
             return self.get(feature_name).values
@@ -83,7 +83,8 @@ class Features(DataFrame):
              feature_name: string      | feature name
             feature_array: list[float] | feature data
         """
-        self.insert(loc=self.num_features(), column=feature_name, value=feature_array)
+#        self.insert(loc=self.num_features(), column=feature_name, value=feature_array)
+        self[feature_name] = feature_array
     
     
     def add_features(self, feature_names, feature_arrays):
@@ -108,20 +109,26 @@ class Features(DataFrame):
         """
         feature = self.get_feature(feature_name)
         
-        mean = np.mean(feature)
-        span = (max(feature) - min(feature))/2.0
+        mean = feature.mean()
+        span = (feature.max() - feature.min())/2.0
         
-        something = (feature - mean) / span
+        self[feature_name] = (feature - mean) / span
     
     
-    def scale_features(self, feature_names):
+    def scale_features(self, feature_names=['all']):
         """
         Scale given list of features
         
         params:
             feature_names: list[string] | list of feature names
+                                        | default=['all'] (i.e. 
+                                        | scale all features)
         """
-        pass
+        if feature_names == ['all']: 
+            feature_names = self.feature_names()
+        
+        for feature_name in feature_names:
+            self.scale_feature(feature_name)
     
     
     
