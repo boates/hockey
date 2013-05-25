@@ -154,8 +154,24 @@ class Features(DataFrame):
             self.scale_feature(feature_name)
     
     
+    def has_feature(self, feature_name):
+        """
+        return: bool | has feature or not
+        
+        params:
+            feature_name: string | feature to check for
+        """
+        return feature_name in self.feature_names()
     
     
+    def has_features(self, feature_names):
+        """
+        return: bool | has all features or not
+        
+        params:
+            feature_names: list[string] | features to check for
+        """
+        return [f for f in feature_names if f not in self.feature_names()] == []
     
     
     
