@@ -19,7 +19,8 @@ class Features(DataFrame):
                 DataFrame is size-mutable
                 
                 i.e. my_features = Features(index=[...])
-    
+    fields:
+        class_names: list[string]
     methods:
         __init__(index)
         feature_names()
@@ -27,15 +28,15 @@ class Features(DataFrame):
         num_examples()
         get_feature(feature_name, as_values=False)
         get_features(feature_names, as_values=False)
-        add_feature(feature_name, feature_array)
-        add_features(feature_names, feature_arrays)
+        add_feature(feature_array, feature_name)
+        add_features(feature_arrays, feature_names)
         delete_feature(feature_name)
         delete_features(feature_names)
         scale_feature(feature_name)
         scale_features(feature_names)
         has_feature(feature_name)
         has_features(feature_names)
-        split_data(train_perc, cv_perc, test_perc, as_values, random)
+        split_data(train_perc, cv_perc, test_perc, as_values=False, random=True)
     """
     def __init__(self, index):
         """
@@ -45,21 +46,38 @@ class Features(DataFrame):
             index: array | index array for DataFrame initialization
         """
         DataFrame.__init__(self, index=index)
-        self.test = 3
+        self._feature_names = []
+        self._class_names   = []
     
     
     def feature_names(self):
         """
         return: list[string] | list of feature names
         """
-        return self.columns
+        return self._feature_names
+    
+    
+    def class_names(self):
+        """
+        return: list[string] or string (if only one class)
+        """
+        if self.num_classes > 1:
+            return self._class_names
+        return self._class_names
     
     
     def num_features(self):
         """
         return: int | number of features in Feature object
         """
-        return len(self.columns)
+        return len(self.feature_names())
+    
+    
+    def num_classes(self):
+        """
+        return: int | number of classes in Feature object
+        """
+        return len(self._class_names)
     
     
     def num_examples(self):
@@ -101,28 +119,28 @@ class Features(DataFrame):
             return self.get(feature_names) 
     
     
-    def add_feature(self, feature_name, feature_array):
+    def add_feature(self, feature_array, feature_name):
         """
         Insert a feature into Features object
         
         params:
-             feature_name: string      | feature name
             feature_array: list[float] | feature data
+             feature_name: string      | feature name
         """
-#        self.insert(loc=self.num_features(), column=feature_name, value=feature_array)
         self[feature_name] = feature_array
+        self._feature_names.append(feature_name)
     
     
-    def add_features(self, feature_names, feature_arrays):
+    def add_features(self, feature_arrays, feature_names):
         """
         Insert multiple features into the Features object
         
         params:
-             feature_names: list[string]      | list of feature names
             feature_arrays: list[list[float]] | 2D array of feature data
+             feature_names: list[string]      | list of feature names
         """
         for i, feature_name in enumerate(feature_names):
-            self.add_feature(feature_name, features_array[i])
+            self.add_feature(feature_name, feature_arrays[i])
     
     
     def delete_feature(self, feature_name):
@@ -133,6 +151,7 @@ class Features(DataFrame):
             feature_name: string | feature to delete
         """
         deleted_feature = self.pop(feature_name)
+        self._feature_names.pop(feature_name)
     
     
     def delete_features(self, feature_names):
