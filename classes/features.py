@@ -8,6 +8,7 @@ and analysis package
 """
 from pandas import DataFrame
 import numpy as np
+from random import shuffle
 
 class Features(DataFrame):
     """
@@ -184,12 +185,42 @@ class Features(DataFrame):
         return all(f in self.feature_names() for f in feature_names)
     
     
-    # slicing functions?
+    def split(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, random=True):
+        """
+        return: train_data, cv_data, test_data | as pandas DataFrames and Series
+                -- OR (depending on the as_values flag) --
+                train_data, cv_data, test_data | as np.arrays (2D and/or 1D)
+        params:
+           train_perc: float | percentage of data for training set (default=0.7)
+              cv_perc: float | percentage of data for cross validation set (default=0.0)
+            test_perc: float | percentage of data for test set (default=0.3)
+                                  (trainPerc + cvPerc + testPerc must equal 1.0)
+            as_values: bool  | return as np.array or not
+               random: bool  | random shuffling for train/test/cv data or not
+        """
+        assert train_perc + cv_perc + test_perc == 1.0, 'train_perc + cv_perc + test_perc != 1.0'
+        
+        N = self.num_examples()
+        
+        indices = range(N)
+        if random:
+            shuffle(indices)
+        
+        train_length = int(N*train_perc)
+        cv_length    = int(N*cv_perc)
+        test_length  = int(N*test_perc)
+        
+        train_data = self.ix[ indices[:train_length] ]
+        cv_data    = self.ix[ indices[train_length:train_length+cv_length] ]
+        test_data  = self.ix[ indices[-test_length:] ]
+        
+        if as_values:
+            return train_data.values, cv_data.values, test_data.values
+            
+        return train_data, cv_data, test_data    
     
     
-    
-    
-    
+    # class name etc.
     
     
     
