@@ -21,6 +21,7 @@ class Features(DataFrame):
                 i.e. my_features = Features(index=[...])
     
     methods:
+        __init__(index)
         feature_names()
         num_features()
         num_examples()
@@ -36,6 +37,17 @@ class Features(DataFrame):
         has_features(feature_names)
         split_data(train_perc, cv_perc, test_perc, as_values, random)
     """
+    def __init__(self, index):
+        """
+        Initialize Features object with index array for DataFrame
+        
+        params:
+            index: array | index array for DataFrame initialization
+        """
+        DataFrame.__init__(self, index=index)
+        self.test = 3
+    
+    
     def feature_names(self):
         """
         return: list[string] | list of feature names
