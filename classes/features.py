@@ -19,27 +19,40 @@ class Features(DataFrame):
                 DataFrame is size-mutable
                 
                 i.e. my_features = Features(index=[...])
+    
     fields:
-        class_names: list[string]
+        _feature_names: list[string]
+        _class_names:   list[string]
+    
     methods:
         __init__(index)
-        num_examples()
-        num_features()
-        feature_names()
-        get_feature(feature_name, as_values=False)
-        get_features(feature_names, as_values=False)
-        add_feature(feature_array, feature_name)
-        add_features(feature_arrays, feature_names)
-        delete_feature(feature_name)
-        delete_features(feature_names)
-        scale_feature(feature_name)
-        scale_features(feature_names)
-        has_feature(feature_name)
-        has_features(feature_names)
-        class_names()
-        num_classes()
-        get_class(class_name, as_values)
-        get_classes(class_names, as_values)
+        --
+        num_examples()                                  | int
+        --
+        num_features()                                  | int
+        feature_names()                                 | list[string]
+        get_feature(feature_name, as_values=False)      | Series or np.array[dtype]
+        get_features(feature_names, as_values=False)    | DataFrame or np.array[dtype]
+        add_feature(feature_array, feature_name)        | N/A
+        add_features(feature_arrays, feature_names)     | N/A
+        delete_feature(feature_name)                    | N/A
+        delete_features(feature_names)                  | N/A
+        scale_feature(feature_name)                     | N/A
+        scale_features(feature_names)                   | N/A
+        has_feature(feature_name)                       | bool
+        has_features(feature_names)                     | bool
+        --
+        num_classes()                                   | int
+        class_names()                                   | list[string]
+        get_class(class_name, as_values=False)          | Series or np.array[dtype]
+        get_classes(class_names, as_values=False)       | DataFrame or np.array[dtype]
+        add_class(class_array, class_name)              | N/A
+        add_classes(class_arrays, class_names)          | N/A
+        delete_class(class_name)                        | N/A
+        delete_classes(class_names)                     | N/A
+        has_class(class_name)                           | bool
+        has_classes(class_names)                        | bool
+        --
         split_data(train_perc, cv_perc, test_perc, as_values=False, random=True)
     """
     def __init__(self, index):
@@ -275,6 +288,46 @@ class Features(DataFrame):
             self.add_class(class_name, class_arrays[i])
     
     
+    def delete_class(self, class_name):
+        """
+        Remove class column from Features object
+        
+        params:
+            class_name: string | class to delete
+        """
+        deleted_class = self.pop(class_name)
+        self._class_names.pop(class_name)
+    
+    
+    def delete_classes(self, class_names):
+        """
+        Remove set of given classes from Features object
+        
+        params:
+            class_names: list[string] | class to delete
+        """
+        for class_name in class_names:
+            self.delete_class(class_name)
+    
+    
+    def has_class(self, class_name):
+        """
+        return: bool | has class or not
+        
+        params:
+            class_name: string | class to check for
+        """
+        return class_name in self.class_names()
+    
+    
+    def has_classes(self, class_names):
+        """
+        return: bool | has all classes or not
+        
+        params:
+            class_names: list[string] | classes to check for
+        """
+        return all(c in self.class_names() for c in class_names) 
     
     
     def split_data(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, random=True):
@@ -312,7 +365,6 @@ class Features(DataFrame):
         return train_data, cv_data, test_data    
     
     
-    # class name etc. t
     
     
     
