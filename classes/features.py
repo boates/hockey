@@ -38,6 +38,8 @@ class Features(DataFrame):
         has_features(feature_names)
         class_names()
         num_classes()
+        get_class(class_name, as_values)
+        get_classes(class_names, as_values)
         split_data(train_perc, cv_perc, test_perc, as_values=False, random=True)
     """
     def __init__(self, index):
@@ -247,6 +249,31 @@ class Features(DataFrame):
               as_values: bool         | return as np.array or not
         """
         return self.get_features(class_names, as_values=as_values)
+    
+    
+    def add_class(self, class_array, class_name):
+        """
+        Insert a class into Features object
+        
+        params:
+            class_array: list[float] | class data
+             class_name: string      | class name
+        """
+        self[class_name] = class_array
+        self._class_names.append(class_name)
+    
+    
+    def add_classes(self, class_arrays, class_name):
+        """
+        Insert multiple classes into the Features object
+        
+        params:
+            class_arrays: list[list[float]] | 2D array of class data
+             class_names: list[string]      | list of class names
+        """
+        for i, class_name in enumerate(class_names):
+            self.add_class(class_name, class_arrays[i])
+    
     
     
     
