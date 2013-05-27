@@ -34,6 +34,7 @@ class Features(DataFrame):
         scale_features(feature_names)
         has_feature(feature_name)
         has_features(feature_names)
+        split_data(train_perc, cv_perc, test_perc, as_values, random)
     """
     def feature_names(self):
         """
