@@ -104,7 +104,7 @@ class Features(DataFrame):
             return self.get(feature_name)
     
     
-    def get_features(self, feature_names, as_values=False):
+    def get_features(self, feature_names=['all'], as_values=False):
         """
         return: pandas DataFrame | features data with names
                 -- OR (depending on as_values flag) --
@@ -112,8 +112,12 @@ class Features(DataFrame):
         
         params:
            feature_names: list[string] | list of features to get
+                                       | (default=['all'])
                as_values: bool         | return as np.array or not
         """
+        if feature_names == ['all'] and 'all' not in self.feature_names():
+            feature_names = self.feature_names()
+        
         if as_values:
             return self.get(feature_names).values
         else:
@@ -191,7 +195,7 @@ class Features(DataFrame):
                                         | default=['all'] (i.e. 
                                         | scale all features)
         """
-        if feature_names == ['all']: 
+        if feature_names == ['all'] and 'all' not in self.feature_names(): 
             feature_names = self.feature_names()
         
         for feature_name in feature_names:
