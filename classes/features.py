@@ -23,9 +23,9 @@ class Features(DataFrame):
         class_names: list[string]
     methods:
         __init__(index)
-        feature_names()
-        num_features()
         num_examples()
+        num_features()
+        feature_names()
         get_feature(feature_name, as_values=False)
         get_features(feature_names, as_values=False)
         add_feature(feature_array, feature_name)
@@ -36,6 +36,8 @@ class Features(DataFrame):
         scale_features(feature_names)
         has_feature(feature_name)
         has_features(feature_names)
+        class_names()
+        num_classes()
         split_data(train_perc, cv_perc, test_perc, as_values=False, random=True)
     """
     def __init__(self, index):
@@ -50,20 +52,11 @@ class Features(DataFrame):
         self._class_names   = []
     
     
-    def feature_names(self):
+    def num_examples(self):
         """
-        return: list[string] | list of feature names
+        return: int | number of examples in Features object
         """
-        return self._feature_names
-    
-    
-    def class_names(self):
-        """
-        return: list[string] or string (if only one class)
-        """
-        if self.num_classes > 1:
-            return self._class_names
-        return self._class_names
+        return len(self)
     
     
     def num_features(self):
@@ -73,18 +66,11 @@ class Features(DataFrame):
         return len(self.feature_names())
     
     
-    def num_classes(self):
+    def feature_names(self):
         """
-        return: int | number of classes in Feature object
+        return: list[string] | list of feature names
         """
-        return len(self._class_names)
-    
-    
-    def num_examples(self):
-        """
-        return: int | number of examples in Features object
-        """
-        return len(self)
+        return self._feature_names
     
     
     def get_feature(self, feature_name, as_values=False):
@@ -215,6 +201,53 @@ class Features(DataFrame):
             feature_names: list[string] | features to check for
         """
         return all(f in self.feature_names() for f in feature_names)
+    
+    
+    def num_classes(self):
+        """
+        return: int | number of classes in Feature object
+        """
+        return len(self._class_names)
+    
+    
+    def class_names(self):
+        """
+        return: list[string] or string (if only one class)
+        """
+        if self.num_classes > 1:
+            return self._class_names
+        return self._class_names
+    
+    
+    def get_class(self, class_name, as_values=False):
+        """
+        Uses get_feature() method to retrieve class data
+        
+        return: pandas Series | class data with name
+                -- OR (depending on as_values flag) --
+                np.array      | 1D array of class data
+        
+        params:
+            class_name: string | class to get
+             as_values: bool   | return as np.array or not
+        """
+        return self.get_feature(class_name, as_values=as_values)
+    
+    
+    def get_classes(self, class_names, as_values=False):
+        """
+        Uses get_features() method to retrieve class data
+        
+        return: pandas DataFrame | class data with names
+                -- OR (depending on as_values flag) --
+                np.array         | 2D array of classes data
+        
+        params:
+            class_names: list[string] | list of classes to get
+              as_values: bool         | return as np.array or not
+        """
+        return self.get_features(class_names, as_values=as_values)
+    
     
     
     def split_data(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, random=True):
