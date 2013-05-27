@@ -33,8 +33,8 @@ class Features(DataFrame):
         feature_names()                                 | list[string]
         get_feature(feature_name, as_values=False)      | Series or np.array[dtype]
         get_features(feature_names, as_values=False)    | DataFrame or np.array[dtype]
-        add_feature(feature_array, feature_name)        | N/A
-        add_features(feature_arrays, feature_names)     | N/A
+        insert_feature(feature_array, feature_name)     | N/A
+        insert_features(feature_arrays, feature_names)  | N/A
         delete_feature(feature_name)                    | N/A
         delete_features(feature_names)                  | N/A
         scale_feature(feature_name)                     | N/A
@@ -46,8 +46,8 @@ class Features(DataFrame):
         class_names()                                   | list[string]
         get_class(class_name, as_values=False)          | Series or np.array[dtype]
         get_classes(class_names, as_values=False)       | DataFrame or np.array[dtype]
-        add_class(class_array, class_name)              | N/A
-        add_classes(class_arrays, class_names)          | N/A
+        insert_class(class_array, class_name)           | N/A
+        insert_classes(class_arrays, class_names)       | N/A
         delete_class(class_name)                        | N/A
         delete_classes(class_names)                     | N/A
         has_class(class_name)                           | bool
@@ -124,7 +124,7 @@ class Features(DataFrame):
             return self.get(feature_names) 
     
     
-    def add_feature(self, feature_array, feature_name):
+    def insert_feature(self, feature_array, feature_name):
         """
         Insert a feature into Features object
         
@@ -136,7 +136,7 @@ class Features(DataFrame):
         self._feature_names.append(feature_name)
     
     
-    def add_features(self, feature_arrays, feature_names):
+    def insert_features(self, feature_arrays, feature_names):
         """
         Insert multiple features into the Features object
         
@@ -145,7 +145,7 @@ class Features(DataFrame):
              feature_names: list[string]      | list of feature names
         """
         for i, feature_name in enumerate(feature_names):
-            self.add_feature(feature_name, feature_arrays[i])
+            self.insert_feature(feature_name, feature_arrays[i])
     
     
     def delete_feature(self, feature_name):
@@ -268,7 +268,7 @@ class Features(DataFrame):
         return self.get_features(class_names, as_values=as_values)
     
     
-    def add_class(self, class_array, class_name):
+    def insert_class(self, class_array, class_name):
         """
         Insert a class into Features object
         
@@ -280,7 +280,7 @@ class Features(DataFrame):
         self._class_names.append(class_name)
     
     
-    def add_classes(self, class_arrays, class_name):
+    def insert_classes(self, class_arrays, class_name):
         """
         Insert multiple classes into the Features object
         
@@ -289,7 +289,7 @@ class Features(DataFrame):
              class_names: list[string]      | list of class names
         """
         for i, class_name in enumerate(class_names):
-            self.add_class(class_name, class_arrays[i])
+            self.insert_class(class_name, class_arrays[i])
     
     
     def delete_class(self, class_name):
