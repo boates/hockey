@@ -185,7 +185,7 @@ class Features(DataFrame):
         return all(f in self.feature_names() for f in feature_names)
     
     
-    def split(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, random=True):
+    def split_data(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, random=True):
         """
         return: train_data, cv_data, test_data | as pandas DataFrames and Series
                 -- OR (depending on the as_values flag) --
