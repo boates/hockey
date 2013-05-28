@@ -56,7 +56,7 @@ class Features():
         has_classes(class_names)                        | bool
         rename_class(current_name, new_name)            | N/A
         --
-        append_row(row)                                 | N/A
+        append(row)                                     | N/A
         split_data(train_perc, cv_perc, test_perc, as_values=False, shuffle=True)   | array, array, array
     """
     def __init__(self, index):
@@ -372,6 +372,24 @@ class Features():
         self._class_names.append(new_name)
     
     
+    def append(self, row):
+        """
+        Append a new row to the Features object
+        
+        NOTE: row data must contain values for all current feature/class 
+        
+        params:
+            row: dict[string:dtype] | dictionary of feature names and data
+        """
+        assert sorted(row.keys()) == sorted(self.feature_names()+self.class_names()), 'Missing key(s) for append'
+        
+        single_row = pd.DataFrame(index=range(1))
+        for key, value in row.items():
+            single_row[key] = [value]
+        
+        self._df = self._df.append(single_row, ignore_index=True)
+    
+    
     def split_data(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, random=True):
         """
         return: train_data, cv_data, test_data | as pandas DataFrames and Series
@@ -381,7 +399,7 @@ class Features():
            train_perc: float | percentage of data for training set (default=0.7)
               cv_perc: float | percentage of data for cross validation set (default=0.0)
             test_perc: float | percentage of data for test set (default=0.3)
-                                  (trainPerc + cvPerc + testPerc must equal 1.0)
+                               ---> (trainPerc + cvPerc + testPerc must equal 1.0)
             as_values: bool  | return as np.array or not
                random: bool  | random shuffling for train/test/cv data or not
         """
@@ -406,23 +424,6 @@ class Features():
             
         return train_data, cv_data, test_data    
     
-    
-    def append(self, row):
-        """
-        Append a new row to the Features object
-        
-        NOTE: row data must contain values for all current feature/class 
-        
-        params:
-            row: dict[string:dtype] | dictionary of feature names and data
-        """
-        assert sorted(row.keys()) == sorted(self.feature_names()+self.class_names()), 'Missing key(s) for append'
-        
-        single_row = pd.DataFrame(index=range(1))
-        for key, value in row.items():
-            single_row[key] = [value]
-        
-        self._df = self._df.append(single_row, ignore_index=True)
 
 
 def main():
