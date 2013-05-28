@@ -10,9 +10,9 @@ import numpy as np
 import pandas as pd
 from random import shuffle
 
-class Features():
+class Features(pd.DataFrame):
     """
-    Features object
+    Features object inherits from pd.DataFrame
     
     IMPORTANT:  like a pandas.DataFrame, the index array
                 must be given on initialization since the
@@ -25,15 +25,14 @@ class Features():
         _class_names:   list[string]
     
     methods:                                   RETURNS: |
-        __init__(index)                                 | N/A
-        __repr__()                                      | string
+        __init__(*args, **kwargs)                       | N/A
         --
         num_examples()                                  | int
         --
         num_features()                                  | int
         feature_names()                                 | list[string]
-        get_feature(feature_name, as_values=False)      | Series or np.array[dtype]
-        get_features(feature_names, as_values=False)    | DataFrame or np.array[dtype]
+        get_feature(feature_name, as_values=False)      | pd.Series or np.array[dtype]
+        get_features(feature_names, as_values=False)    | pd.DataFrame or np.array[dtype]
         insert_feature(feature_array, feature_name)     | N/A
         insert_features(feature_arrays, feature_names)  | N/A
         delete_feature(feature_name)                    | N/A
@@ -46,8 +45,8 @@ class Features():
         --
         num_classes()                                   | int
         class_names()                                   | list[string]
-        get_class(class_name, as_values=False)          | Series or np.array[dtype]
-        get_classes(class_names, as_values=False)       | DataFrame or np.array[dtype]
+        get_class(class_name, as_values=False)          | pd.Series or np.array[dtype]
+        get_classes(class_names, as_values=False)       | pd.DataFrame or np.array[dtype]
         insert_class(class_array, class_name)           | N/A
         insert_classes(class_arrays, class_names)       | N/A
         delete_class(class_name)                        | N/A
@@ -56,34 +55,30 @@ class Features():
         has_classes(class_names)                        | bool
         rename_class(current_name, new_name)            | N/A
         --
-        append(row)                                     | N/A
-        split_data(train_perc, cv_perc, test_perc, as_values=False, shuffle=True)   | array, array, array
+        all_names()                                     | list[string]
+        get_all(as_values=False)                        | pd.DataFrame or np.array[dtype]
+        append_row(row)                                 | N/A
+        split_data(train_perc, cv_perc, test_perc, as_values=False, randomize=True)
+                                                        | pd.DataFrame*3 or np.array[dtype]*3
     """
-    def __init__(self, index):
+    def __init__(self, *args, **kwargs):
         """
         Initialize Features object with index array for DataFrame
         
         params:
             index: list[int] | index array for DataFrame initialization
         """
-#        super(Features, self).__init__(index=index)
-        self._df = pd.DataFrame(index=index)
+        super(Features, self).__init__(*args, **kwargs)
+#        self._df = pd.DataFrame(index=index)
         self._feature_names = []
         self._class_names   = []
     
-    
-    def __repr__(self):
-        """
-        Invokes pd.DataFrame.__repr__()
-        """
-        return self._df.__repr__()
-    
-    
+        
     def num_examples(self):
         """
         return: int | number of examples in Features object
         """
-        return len(self._df)
+        return len(self)
     
     
     def num_features(self):
@@ -111,9 +106,9 @@ class Features():
               as_values: bool   | return as np.array or not
         """
         if as_values:
-            return self._df.get(feature_name).values
+            return self.get(feature_name).values
         else:
-            return self._df.get(feature_name)
+            return self.get(feature_name)
     
     
     def get_features(self, feature_names=['all'], as_values=False):
@@ -131,9 +126,9 @@ class Features():
             feature_names = self.feature_names()
         
         if as_values:
-            return self._df.get(feature_names).values
+            return self.get(feature_names).values
         else:
-            return self._df.get(feature_names) 
+            return self.get(feature_names) 
     
     
     def insert_feature(self, feature_array, feature_name):
@@ -144,7 +139,7 @@ class Features():
             feature_array: list[float] | feature data
              feature_name: string      | feature name
         """
-        self._df[feature_name] = feature_array
+        self[feature_name] = feature_array
         self._feature_names.append(feature_name)
     
     
@@ -157,7 +152,7 @@ class Features():
              feature_names: list[string]      | list of feature names
         """
         for i, feature_name in enumerate(feature_names):
-            self.insert_feature(feature_name, feature_arrays[i])
+            self.insert_feature(feature_arrays[i], feature_name)
     
     
     def delete_feature(self, feature_name):
@@ -167,7 +162,7 @@ class Features():
         params:
             feature_name: string | feature to delete
         """
-        deleted_feature = self._df.pop(feature_name)
+        deleted_feature = self.pop(feature_name)
         self._feature_names.pop(feature_name)
     
     
@@ -210,7 +205,7 @@ class Features():
            current_name: string | name of feature to be renamed
                new_name: string | name to be given to feature
         """
-        self._df.rename(columns={current_name:new_name}, inplace=True)
+        self.rename(columns={current_name:new_name}, inplace=True)
         
         self._feature_names.remove(current_name)
         self._feature_names.append(new_name)
@@ -229,7 +224,7 @@ class Features():
         mean = feature.mean()
         span = (feature.max() - feature.min())/2.0
         
-        self._df[feature_name] = (feature - mean) / span
+        self[feature_name] = (feature - mean) / span
     
     
     def scale_features(self, feature_names=['all']):
@@ -277,7 +272,7 @@ class Features():
         return self.get_feature(class_name, as_values=as_values)
     
     
-    def get_classes(self, class_names, as_values=False):
+    def get_classes(self, class_names=['all'], as_values=False):
         """
         Uses get_features() method to retrieve class data
         
@@ -289,6 +284,8 @@ class Features():
             class_names: list[string] | list of classes to get
               as_values: bool         | return as np.array or not
         """
+        if class_names == ['all'] and 'all' not in self.class_names():
+            class_names = self.class_names()
         return self.get_features(class_names, as_values=as_values)
     
     
@@ -300,11 +297,11 @@ class Features():
             class_array: list[float] | class data
              class_name: string      | class name
         """
-        self._df[class_name] = class_array
+        self[class_name] = class_array
         self._class_names.append(class_name)
     
     
-    def insert_classes(self, class_arrays, class_name):
+    def insert_classes(self, class_arrays, class_names):
         """
         Insert multiple classes into the Features object
         
@@ -313,7 +310,7 @@ class Features():
              class_names: list[string]      | list of class names
         """
         for i, class_name in enumerate(class_names):
-            self.insert_class(class_name, class_arrays[i])
+            self.insert_class(class_arrays[i], class_name)
     
     
     def delete_class(self, class_name):
@@ -323,7 +320,7 @@ class Features():
         params:
             class_name: string | class to delete
         """
-        deleted_class = self._df.pop(class_name)
+        deleted_class = self.pop(class_name)
         self._class_names.pop(class_name)
     
     
@@ -366,31 +363,60 @@ class Features():
            current_name: string | name of class to be renamed
                new_name: string | name to be given to class
         """
-        self._df.rename(columns={current_name:new_name}, inplace=True)
+        self.rename(columns={current_name:new_name}, inplace=True)
         
         self._class_names.remove(current_name)
         self._class_names.append(new_name)
     
     
-    def append(self, row):
+    def all_names(self):
         """
-        Append a new row to the Features object
+        return: list[string] | list of all feature and class names
+        """
+        return self.feature_names() + self.class_names()
+    
         
-        NOTE: row data must contain values for all current feature/class 
+    def get_all(self, as_values=False):
+        """
+        return: pd.DataFrame | contains all features and classes
+                -- OR (depending on as_values flag) --
+                np.array     | contains all features and classes data
         
         params:
-            row: dict[string:dtype] | dictionary of feature names and data
+            as_values: bool | whether to return as np.array or not
         """
-        assert sorted(row.keys()) == sorted(self.feature_names()+self.class_names()), 'Missing key(s) for append'
-        
-        single_row = pd.DataFrame(index=range(1))
-        for key, value in row.items():
-            single_row[key] = [value]
-        
-        self._df = self._df.append(single_row, ignore_index=True)
+        if as_values:
+            return self[self.all_names()].values
+        return self[self.all_names()]
     
     
-    def split_data(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, random=True):
+    def append_row(self, row):
+        """
+        Append a new row to the Features object
+         - NaN's inserted for absent feature/class names
+        
+        Warning: This function is incredibly inefficient and involves
+                 copying and rebuilding the entire Features object from
+                 scratch
+        
+        params:
+            row: dict[string:dtype] | dictionary of feature/class names and data
+        """
+        df_copy = self.get_all()
+        df_appended = df_copy.append(row, ignore_index=True)
+        
+        df_features = df_appended[self.feature_names()]
+        df_classes  = df_appended[self.class_names()]
+        
+        new_object = Features(index=range(self.num_examples()+1))
+        
+        new_object.insert_features(np.transpose(df_features.values), df_features.columns)
+        new_object.insert_classes(np.transpose(df_classes.values), df_classes.columns)
+        
+        return new_object
+    
+        
+    def split_data(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, randomize=True):
         """
         return: train_data, cv_data, test_data | as pandas DataFrames and Series
                 -- OR (depending on the as_values flag) --
@@ -408,33 +434,37 @@ class Features():
         N = self.num_examples()
         
         indices = range(N)
-        if random:
+        if randomize:
             shuffle(indices)
         
         train_length = int(N*train_perc)
         cv_length    = int(N*cv_perc)
         test_length  = int(N*test_perc)
         
-        train_data = self._df.ix[ indices[:train_length] ]
-        cv_data    = self._df.ix[ indices[train_length:train_length+cv_length] ]
-        test_data  = self._df.ix[ indices[-test_length:] ]
+        train_data = self.ix[ indices[:train_length] ]
+        cv_data    = self.ix[ indices[train_length:train_length+cv_length] ]
+        test_data  = self.ix[ indices[-test_length:] ]
         
         if as_values:
             return train_data.values, cv_data.values, test_data.values
             
         return train_data, cv_data, test_data    
     
+    
 
+    
 
 def main():
     
     f = Features(index=range(10))
+    f.insert_feature(range(80,90), 'tyt')
     f.insert_feature(range(10,20), 'the')
     f.insert_feature(range(17,27), 'abc')
+    
+    f = f.append_row({'the':99,'abc':101})
+#    f = f.append({'the':99,'abc':101}, ignore_index=True)
     print f
     
-    f.append({'the':99,'abc':101})
-    print f
     
     
 
