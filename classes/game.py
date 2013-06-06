@@ -278,10 +278,10 @@ class Game():
         
         # insert the streak
         if location == 'home':
-            self.home_streak = streak
+#            self.home_streak = streak
             self.features['home_streak'] = streak
         elif location == 'away':
-            self.away_streak = streak
+#            self.away_streak = streak
             self.features['away_streak'] = streak
         
         # if both home and away streaks are available
