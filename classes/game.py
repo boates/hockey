@@ -49,7 +49,7 @@ class Game():
             self.away_goals = int(record[3])
             self.home_goals = int(record[4])
             self.result     = str(record[5])
-            self.features   = {}
+            self.attr       = {}
                         
             #==== created by insert_projections
             # self.proj_home_GF
@@ -256,13 +256,13 @@ class Game():
         self.proj_diff_score = proj_diff_score
         
         # add projected goals for / against to features dict
-        self.features['proj_home_GF'] = proj_home_GF
-        self.features['proj_home_GA'] = proj_home_GA
-        self.features['proj_away_GF'] = proj_away_GF
-        self.features['proj_away_GA'] = proj_away_GA
+        self.attr['proj_home_GF'] = proj_home_GF
+        self.attr['proj_home_GA'] = proj_home_GA
+        self.attr['proj_away_GF'] = proj_away_GF
+        self.attr['proj_away_GA'] = proj_away_GA
         
         # add projected score differntial to features dict
-        self.features['proj_diff_score'] = proj_diff_score
+        self.attr['proj_diff_score'] = proj_diff_score
     
     
     def insert_streak(self, streak, location):
@@ -279,15 +279,15 @@ class Game():
         # insert the streak
         if location == 'home':
             self.home_streak = streak
-            self.features['home_streak'] = streak
+            self.attr['home_streak'] = streak
         elif location == 'away':
             self.away_streak = streak
-            self.features['away_streak'] = streak
+            self.attr['away_streak'] = streak
         
         # if both home and away streaks are available
         # put the difference into the features dict
         try:
-            self.features['diff_streak'] = self.home_streak - self.away_streak
+            self.attr['diff_streak'] = self.home_streak - self.away_streak
         except AttributeError:
             pass
     
