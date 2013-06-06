@@ -54,14 +54,10 @@ class TeamSeason():
         params:
             date: string | a date string e.g. '2010-10-31'
         """
-        # select all games played on date (if available)
         g = [x for x in self.games if x.date == date]
         
-        # if a game was found, return it
         if g:
             return g[0]
-        
-        # otherwise, raise error
         else:
             raise IndexError('no Game found on '+date)
     
