@@ -15,24 +15,15 @@ def get_weights(N, scheme='constant'):
        scheme: string | weighting scheme: default='constant'
                         options are 'constant' or 'linear'
     """
-    # make sure N is valid
     assert N >= 1, 'number of weights must be >= 1; given N='+str(N)
-    
-    # make sure scale is valid
     assert scheme in ['constant', 'linear'], 'invalid scale='+str(scale)
     
-    # constant weighting
     if scheme == 'constant':
-        # compute normalized weights (sum to 1)
         weights = [1.0/N for i in range(N)]
         
-    # linear weighting
     elif scheme == 'linear':
-        # get a linear scale
         values = range(1,N+1)
-        # compute the sum for normaization
         sum_values = float(sum(values))
-        # compute normalized weights (sum to 1)
         weights = [v/sum_values for v in values]
         
     return weights
@@ -47,13 +38,10 @@ def scale_feature(feature):
     params:
             list[float] | feature to be scaled
     """
-    # compute the mean
     mean = sum(feature) / float(len(feature))
     
-    # get the max-min distance
     distance = float(max(feature) - min(feature))
     
-    # scale the feature
     scaled_feature = [(x-mean)/distance for x in feature]
     
     return scaled_feature
@@ -67,7 +55,6 @@ def scale_features(features, feature_names):
            features: dataframe    | original unscaled features
       feature_names: list[string] | list of features to scale
     """
-    # scale each feature
     for f in feature_names:
         features[f] = scale_feature(features[f].values)
     return features
