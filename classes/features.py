@@ -598,7 +598,7 @@ if __name__ == '__main__':
     
     #.truncate() for date range selection
     
-    # from_records() for MySQL read-in
+    # from_records() for MySQL read-in ---> pd.io.sql
     
     
     
