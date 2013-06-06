@@ -60,49 +60,6 @@ def scale_features(features, feature_names):
     return features
 
 
-def get_features(game_list, feature_names, scale=True):
-    """
-    return: features dataframe
-    
-    params:
-          game_list: list[Game]   | list of Games
-      feature_names: list[string] | list of feature names
-              scale: bool         | whether to feature scale or not
-    """
-    # initialize features array
-    all_features = []
-    
-    # loop over all Games
-    for g in game_list:
-        
-        # create empty feature vector for current Game
-        game_features = []
-        
-        # loop over requested features
-        for f in feature_names:
-            
-            # append to game features
-            game_features.append( g.features[f] )
-        
-        # set the target metric
-        result = int( g.numerical_result() )
-        
-        # append the result as the final Game feature
-        game_features.append(result)
-        
-        # append the Game feature list to features array
-        all_features.append(game_features)
-    
-    # create features dataframe
-    features = pandas.DataFrame(all_features, columns=feature_names+['class'])
-    
-    # feature scaling if requested
-    if scale:
-        features = scale_features(features, feature_names)
-    
-    return features
-
-
 def makePlots(feature, results, nbins=100):
     """
     """
