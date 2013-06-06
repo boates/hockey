@@ -514,7 +514,7 @@ class Features(object):
         """
         self._df = self._df.append(row, ignore_index=True)
     
-        
+    
     def split_data(self, train_perc=0.7, cv_perc=0.0, test_perc=0.3, as_values=False, randomize=True):
         """
         return: train_data, cv_data, test_data | as pandas DataFrames and Series
