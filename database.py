@@ -219,8 +219,8 @@ def main():
     remove hockey database and create from scratch
     requires local scores/ directory with .scores files
     """
-#    dbRemove(db='hockey')
-#    dbCreate(db='hockey')
+    dbRemove(db='hockey')
+    dbCreate(db='hockey')
     pass
 
 

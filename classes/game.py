@@ -50,17 +50,6 @@ class Game():
             self.home_goals = int(record[4])
             self.result     = str(record[5])
             self.features   = {}
-                        
-            #==== created by insert_projections
-            # self.proj_home_GF
-            # self.proj_home_GA
-            # self.proj_away_GF
-            # self.proj_away_GA
-            # self.proj_diff_score
-            #==== created by insert_streak
-            # self.home_streak
-            # self.away_streak
-            #======================
         else:
             s = 'Must provide record when initializting game object'
             raise AttributeError(s)
@@ -81,19 +70,20 @@ class Game():
         
         # include projections if available
         try:
-            tmp = self.prof_diff_score
+            proj_diff_score = self.features['prof_diff_score']
             s += '| dp='
-            s += str(self.proj_diff_score) + ' '
-        except AttributeError:
+            s += str(proj_diff_score) + ' '
+        except KeyError:
             pass
         
         # include streaks if available
         try:
-            a, b = self.home_streak, self.away_streak
+            away_streak = self.features['away_streak']
+            home_streak = self.features['home_streak']
             s += '| st='
-            s += str(self.away_streak) + ' '
-            s += str(self.home_streak)
-        except AttributeError:
+            s += str(away_streak) + ' '
+            s += str(home_streak)
+        except KeyError:
             pass
         
         return s
@@ -162,17 +152,14 @@ class Game():
                 team: string | 3-character team name
           include_SO: bool   | whether SO goals count or not
         """
-        # team must be one of two teams in Game
+        # team must have played in Game
         assert self.has_team(team), 'team='+str(team)
         
         # do not count SO goals if specified
         if self.ended_in_SO() and not include_SO:
             return min(self.home_goals, self.away_goals)
         
-        # if given team was the home team
         elif team == self.home: return self.home_goals
-            
-        # if the given team was the away team
         elif team == self.away: return self.away_goals
     
         
@@ -184,17 +171,14 @@ class Game():
                 team: string | 3-character team name
           include_SO: bool   | whether SO goals count or not
         """
-        # team must be one of two teams in Game
+        # team must have played in Game
         assert self.has_team(team), 'team='+str(team)
         
         # do not count SO goals if specified
         if self.ended_in_SO() and not include_SO:
             return min(self.home_goals, self.away_goals)
         
-        # if given team was the home team
         elif team == self.home: return self.away_goals
-            
-        # if the given team was the away team
         elif team == self.away: return self.home_goals
     
         
@@ -248,20 +232,10 @@ class Game():
              proj_away_GA: float | projected GA for away team
           proj_diff_score: float | projected score differential
         """
-        # set member variables
-        self.proj_home_GF    = proj_home_GF
-        self.proj_home_GA    = proj_home_GA
-        self.proj_away_GF    = proj_away_GF
-        self.proj_away_GA    = proj_away_GA
-        self.proj_diff_score = proj_diff_score
-        
-        # add projected goals for / against to features dict
-        self.features['proj_home_GF'] = proj_home_GF
-        self.features['proj_home_GA'] = proj_home_GA
-        self.features['proj_away_GF'] = proj_away_GF
-        self.features['proj_away_GA'] = proj_away_GA
-        
-        # add projected score differntial to features dict
+        self.features['proj_home_GF']    = proj_home_GF
+        self.features['proj_home_GA']    = proj_home_GA
+        self.features['proj_away_GF']    = proj_away_GF
+        self.features['proj_away_GA']    = proj_away_GA
         self.features['proj_diff_score'] = proj_diff_score
     
     
@@ -273,21 +247,16 @@ class Game():
             streak: int    | streak (pos=winning, neg=losing)
           location: string | 'home' or 'away'
         """
-        # location must be either 'home' or 'away'
         assert location in ['home', 'away'], 'location='+str(location)
         
-        # insert the streak
         if location == 'home':
-            self.home_streak = streak
             self.features['home_streak'] = streak
         elif location == 'away':
-            self.away_streak = streak
             self.features['away_streak'] = streak
         
-        # if both home and away streaks are available
-        # put the difference into the features dict
+        # if both home and away streaks are available, insert difference
         try:
-            self.features['diff_streak'] = self.home_streak - self.away_streak
-        except AttributeError:
+            self.features['diff_streak'] = self.features['home_streak'] - self.features['away_streak']
+        except KeyError:
             pass
     

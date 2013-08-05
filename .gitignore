@@ -2,4 +2,6 @@
 .*~
 *.pyc
 *tmproj
-*nogit
+*.nogit
+*.hist
+*.dat

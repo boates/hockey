@@ -28,28 +28,28 @@ class Season():
         Initialize Season object
         """
         self.season = season
-        self.all    = {}
+        self._all   = {}
     
     
     def insert(self, team_season):
         """
         Insert TeamSeason object into Season
         """
-        self.all[team_season.team] = team_season
+        self._all[team_season.team] = team_season
     
     
     def teams(self):
         """
         return: sorted list of teams present in Season
         """
-        return sorted( self.all.keys() )
+        return sorted( self._all.keys() )
     
     
     def get_team_season(self, team):
         """
         return: TeamSeason | object for given team's season
         """
-        return self.all[team]
+        return self._all[team]
     
     
     def get_projections(self, window, location='all', result='all', scheme='constant'):
