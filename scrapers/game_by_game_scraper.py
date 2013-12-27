@@ -110,7 +110,6 @@ class GameByGameScraper(NHLScraper):
             game_id = row[0] + '_' + away_team + '_' + home_team
 
             row = tuple([game_id, str(self.get_season())] + row)
-            print row
 
             data.append(row)
 
