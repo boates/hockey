@@ -21,24 +21,16 @@ class PenaltiesByGameScraper(NHLScraper):
                               ,'season'
                               ,'game_date'
                               ,'team'
-                              ,'decision'
-                              ,'result'
-                              ,'location'
                               ,'opponent'
-                              ,'record'
-                              ,'wins'
-                              ,'losses'
-                              ,'goals_for'
-                              ,'goals_against'
-                              ,'scorers'
-                              ,'powerplay_goals'
-                              ,'powerplay_opportunities'
-                              ,'powerplay_goals_against'
-                              ,'times_shorthanded'
-                              ,'shots_for'
-                              ,'shots_against'
-                              ,'winning_goaltender'
-                              ,'attendance'))
+                              ,'location'
+                              ,'minors'
+                              ,'majors'
+                              ,'misconducts'
+                              ,'game_misconducts'
+                              ,'match_penalties'
+                              ,'bench_minors'
+                              ,'total_penalties'
+                              ,'penalty_minutes'))
 
     def get_url(self):
         values = (self.get_season(), self.get_page())
@@ -69,31 +61,27 @@ class PenaltiesByGameScraper(NHLScraper):
                 keep_looping = False
 
         data = []
-        num_rows = len(parsed_html) / (self.get_num_columns()-4) # 4 extra columns
+        num_rows = len(parsed_html) / (self.get_num_columns()-2) # 4 extra columns
         for i in xrange(num_rows):
 
-            row = parsed_html[i*(self.get_num_columns()-4):(i+1)*(self.get_num_columns()-4)]
+            row = parsed_html[i*(self.get_num_columns()-2):(i+1)*(self.get_num_columns()-2)]
 
             # format date as YYYY-MM-DD
             row[0] = format_date(row[0])
 
             # convert team names to acronyms
             row[1] = format_team_name(row[1])
-            if row[5] not in valid_team_names():
-                row[5] = format_team_name(row[5])
+            row[2] = format_team_name(row[2])
 
             # fill in empty results with R for regulation
-            row[3] = 'R' if row[3] == '' else row[3]
+            row[3] = 'HOME' if row[3] == 'H' else 'AWAY'
 
-            # remove comma in attendance
-            row[17] = row[17].replace(',','')
-
-            if row[4] == 'HOME':
+            if row[3] == 'HOME':
                 home_team = row[1]
-                away_team = row[5]
+                away_team = row[2]
             else:
                 away_team = row[1]
-                home_team = row[5]
+                home_team = row[2]
 
             game_id = row[0] + '_' + away_team + '_' + home_team
 
@@ -102,40 +90,29 @@ class PenaltiesByGameScraper(NHLScraper):
 
             data.append(row)
 
-        sys.exit(0)
         return tuple(data)
 
     def create_table_query(self):
         query  = " CREATE TABLE IF NOT EXISTS %s.%s (" % self.database_table()
-        query += " game_id VARCHAR(32)                 \
-                 , game_date DATE                      \
-                 , season SMALLINT(4)                  \
-                 , team VARCHAR(3)                     \
-                 , decision VARCHAR(2)                 \
-                 , result VARCHAR(2)                   \
-                 , location VARCHAR(4)                 \
-                 , opponent VARCHAR(3)                 \
-                 , record VARCHAR(16)                  \
-                 , wins SMALLINT(4)                    \
-                 , losses SMALLINT(4)                  \
-                 , goals_for SMALLINT(4)               \
-                 , goals_against SMALLINT(4)           \
-                 , scorers VARCHAR(128)                \
-                 , powerplay_goals SMALLINT(4)         \
-                 , powerplay_opportunities SMALLINT(4) \
-                 , powerplay_goals_against SMALLINT(4) \
-                 , times_shorthanded SMALLINT(4)       \
-                 , shots_for SMALLINT(4)               \
-                 , shots_against SMALLINT(4)           \
-                 , winning_goaltender VARCHAR(64)      \
-                 , attendance INT(11)                  \
-                 , PRIMARY KEY (game_date, team)       \
-                 , KEY (game_id)                       \
-                 , KEY (season)                        \
-                 , KEY (decision)                      \
-                 , KEY (result)                        \
-                 , KEY (location)                      \
-                 , KEY (opponent))                     \
+        query += " game_id VARCHAR(32)           \
+                 , season SMALLINT(4)            \
+                 , game_date DATE                \
+                 , team VARCHAR(3)               \
+                 , opponent VARCHAR(3)           \
+                 , location VARCHAR(4)           \
+                 , minors SMALLINT(4)            \
+                 , majors SMALLINT(4)            \
+                 , misconducts SMALLINT(4)       \
+                 , game_misconducts SMALLINT(4)  \
+                 , match_penalties SMALLINT(4)   \
+                 , bench_minors SMALLINT(4)      \
+                 , total_penalties SMALLINT(4)   \
+                 , penalty_minutes SMALLINT(4)   \
+                 , PRIMARY KEY (game_date, team) \
+                 , KEY (game_id)                 \
+                 , KEY (season)                  \
+                 , KEY (opponent)                \
+                 , KEY (location))               \
                  "
         return query
 
@@ -179,8 +156,7 @@ def build_from_scratch():
 
 def main():
 
-#    build_from_scratch()
-#    update(2014, 1)
+    update(2014, [1, 2, 3])
 
 
 if __name__ == '__main__':
