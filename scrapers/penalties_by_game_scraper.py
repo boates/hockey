@@ -154,8 +154,8 @@ def update(seasons, pages):
 
             print 'season: %s; page: %s' % (season, page)
 
-            game_by_game_scraper = GameByGameScraper(season=season, page=page)
-            query = game_by_game_scraper.replace_into_query()
+            penalties_by_game_scraper = PenaltiesByGameScraper(season=season, page=page)
+            query = penalties_by_game_scraper.replace_into_query()
             database_helper.execute_query(query)
 
     database_helper.close()
@@ -165,9 +165,9 @@ def build_from_scratch():
 
     database_helper = DatabaseHelper()
 
-    game_by_game_scraper = GameByGameScraper()
-    database_helper.execute_query(game_by_game_scraper.drop_table_query())
-    database_helper.execute_query(game_by_game_scraper.create_table_query())
+    penalties_by_game_scraper = PenaltiesByGameScraper()
+    database_helper.execute_query(penalties_by_game_scraper.drop_table_query())
+    database_helper.execute_query(penalties_by_game_scraper.create_table_query())
 
     database_helper.close()
 
