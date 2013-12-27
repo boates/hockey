@@ -83,7 +83,9 @@ class GameSummaryScraper(NHLScraper):
             row[5] = 'R' if row[5] == '' else row[5]
 
             game_id = row[0] + '_' + row[1] + '_' + row[3]
+
             row = tuple([game_id, str(self.get_season())] + row)
+            print row
 
             data.append(row)
 
@@ -157,7 +159,7 @@ def build_from_scratch():
 
 def main():
 
-    update(2014, 1)
+    update(2014, [1, 2, 3])
 
 
 if __name__ == '__main__':
