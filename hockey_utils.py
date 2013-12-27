@@ -6,43 +6,50 @@ def months():
     return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'
            ,'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-def format_team_name(team_name):
-    team_name_map = {'ANAHEIM': 'ANA'
-                    ,'ATLANTA': 'ATL'
-                    ,'BOSTON': 'BOS'
-                    ,'BUFFALO': 'BUF'
-                    ,'CALGARY': 'CAL'
-                    ,'CAROLINA': 'CAR'
-                    ,'CHICAGO': 'CHI'
-                    ,'COLORADO': 'COL'
-                    ,'COLUMBUS': 'CBJ'
-                    ,'DALLAS': 'DAL'
-                    ,'DETROIT': 'DET'
-                    ,'EDMONTON': 'EDM'
-                    ,'FLORIDA': 'FLA'
-                    ,'HARTFORD': 'HFD'
-                    ,'LOS ANGELES': 'LAK'
-                    ,'MINNESOTA': 'MIN'
-                    ,'MONTREAL': 'MTL'
-                    ,'NASHVILLE': 'NSH'
-                    ,'NEW JERSEY': 'NJD'
-                    ,'NY ISLANDERS': 'NYI'
-                    ,'NY RANGERS': 'NYR'
-                    ,'OTTAWA': 'OTT'
-                    ,'PHILADELPHIA': 'PHI'
-                    ,'PHOENIX': 'PHX'
-                    ,'PITTSBURGH': 'PIT'
-                    ,'QUEBEC': 'QBC'
-                    ,'ST LOUIS': 'STL'
-                    ,'SAN JOSE': 'SJS'
-                    ,'TAMPA BAY': 'TBL'
-                    ,'TORONTO': 'TOR'
-                    ,'VANCOUVER': 'VAN'
-                    ,'WASHINGTON': 'WSH'
-                    ,'WINNIPEG': 'WPG'
-                    ,'Winnipeg Jets (1979)': 'WPG'}
+def team_name_map():
+    return {'ANAHEIM': 'ANA'
+           ,'ATLANTA': 'ATL'
+           ,'BOSTON': 'BOS'
+           ,'BUFFALO': 'BUF'
+           ,'CALGARY': 'CGY'
+           ,'CAROLINA': 'CAR'
+           ,'CHICAGO': 'CHI'
+           ,'COLORADO': 'COL'
+           ,'COLUMBUS': 'CBJ'
+           ,'DALLAS': 'DAL'
+           ,'DETROIT': 'DET'
+           ,'EDMONTON': 'EDM'
+           ,'FLORIDA': 'FLA'
+           ,'HARTFORD': 'HFD'
+           ,'LOS ANGELES': 'LAK'
+           ,'MINNESOTA': 'MIN'
+           ,'MONTREAL': 'MTL'
+           ,'NASHVILLE': 'NSH'
+           ,'NEW JERSEY': 'NJD'
+           ,'NY ISLANDERS': 'NYI'
+           ,'NY RANGERS': 'NYR'
+           ,'OTTAWA': 'OTT'
+           ,'PHILADELPHIA': 'PHI'
+           ,'PHOENIX': 'PHX'
+           ,'PITTSBURGH': 'PIT'
+           ,'QUEBEC': 'QBC'
+           ,'ST LOUIS': 'STL'
+           ,'SAN JOSE': 'SJS'
+           ,'TAMPA BAY': 'TBL'
+           ,'TORONTO': 'TOR'
+           ,'VANCOUVER': 'VAN'
+           ,'WASHINGTON': 'WSH'
+           ,'WINNIPEG': 'WPG'
+           ,'Winnipeg Jets (1979)': 'WPG'
+           ,'WIN': 'WPG'
+           ,'QUE': 'QBC'
+           ,'MNS': 'MIN'}
 
-    return team_name_map[team_name]
+def valid_team_names():
+    return team_name_map().values()
+
+def format_team_name(team_name):
+    return team_name_map()[team_name]
 
 def format_date(date):
     month_name_map = {'Jan': '01'
@@ -67,11 +74,3 @@ def format_date(date):
     day = date.split()[1]
 
     return year + '-' + month + '-' + day
-
-
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()
