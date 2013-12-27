@@ -83,7 +83,7 @@ class NHLScraper(object):
     def replace_into_query(self):
         data = self.get_data()
         queries = []
-        query  = "REPLACE INTO %s.%s (id, season, " % self.database_table()
+        query  = "REPLACE INTO %s.%s (" % self.database_table()
         query += "%s, "*self.get_num_columns() % self.get_column_names()
         query  = query[:-2] + ") "
         query += "VALUES"

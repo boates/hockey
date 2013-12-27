@@ -17,7 +17,9 @@ class GameSummaryScraper(NHLScraper):
                                                 ,page=page
                                                 ,database_name=database_name
                                                 ,table_name=table_name)
-        self.set_column_names(('game_date'
+        self.set_column_names(('id'
+                              ,'season'
+                              ,'game_date'
                               ,'away_team'
                               ,'away_goals'
                               ,'home_team'
@@ -65,10 +67,10 @@ class GameSummaryScraper(NHLScraper):
                 keep_looping = False
 
         data = []
-        num_rows = len(parsed_html) / self.get_num_columns()
+        num_rows = len(parsed_html) / (self.get_num_columns()-2) # 2 extra columns
         for i in xrange(num_rows):
 
-            row = parsed_html[i*self.get_num_columns():(i+1)*self.get_num_columns()]
+            row = parsed_html[i*(self.get_num_columns()-2):(i+1)*(self.get_num_columns()-2)]
 
             # format date as YYYY-MM-DD
             row[0] = format_date(row[0])
@@ -150,7 +152,7 @@ def build_from_scratch():
     all_seasons = [str(i) for i in range(1988, 2015) if i != 2005]
     all_pages = range(1, 45)
 
-    update(seasons, pages)
+    update(all_seasons, all_pages)
 
 
 def main():
