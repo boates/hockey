@@ -7,7 +7,7 @@ sys.dont_write_bytecode = True
 import re
 from database_helper import DatabaseHelper
 from nhl_scraper import NHLScraper
-from hockey_utils import *
+from utils.nhl_utils import *
 
 class PenaltiesByGameScraper(NHLScraper):
     """

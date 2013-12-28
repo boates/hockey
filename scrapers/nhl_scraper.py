@@ -2,6 +2,8 @@
 nhl_scraper.py
 Author: Brian Boates
 """
+import sys
+sys.dont_write_bytecode = True
 import urllib2
 
 class NHLScraper(object):

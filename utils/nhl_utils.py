@@ -1,5 +1,5 @@
 """
-hockey_utils.py
+nhl_utils.py
 Author: Brian Boates
 """
 def months():
