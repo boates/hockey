@@ -17,6 +17,7 @@ class GameByGameScraper(NHLScraper):
                                                ,page=page
                                                ,database_name=database_name
                                                ,table_name=table_name)
+        self.set_name('GameByGameScraper')
         self.set_column_names(('game_id'
                               ,'season'
                               ,'game_date'
@@ -39,6 +40,7 @@ class GameByGameScraper(NHLScraper):
                               ,'shots_against'
                               ,'winning_goaltender'
                               ,'attendance'))
+        self.set_max_page(85)
 
     def get_url(self):
         values = (self.get_season(), self.get_page())
@@ -110,7 +112,8 @@ class GameByGameScraper(NHLScraper):
             game_id = row[0] + '_' + away_team + '_' + home_team
 
             row = tuple([game_id, str(self.get_season())] + row)
-            print row
+            if self.is_verbose():
+                print row
 
             data.append(row)
 
