@@ -14,9 +14,10 @@ class PenaltiesByGameScraper(NHLScraper):
     """
     def __init__(self, season=2014, page=1, database_name='nhl', table_name='penalties_by_game'):
         super(PenaltiesByGameScraper, self).__init__(season=season
-                                               ,page=page
-                                               ,database_name=database_name
-                                               ,table_name=table_name)
+                                                    ,page=page
+                                                    ,database_name=database_name
+                                                    ,table_name=table_name)
+        self.set_name('PenaltiesByGameScraper')
         self.set_column_names(('game_id'
                               ,'season'
                               ,'game_date'
@@ -31,6 +32,7 @@ class PenaltiesByGameScraper(NHLScraper):
                               ,'bench_minors'
                               ,'total_penalties'
                               ,'penalty_minutes'))
+        self.set_max_page(85)
 
     def get_url(self):
         values = (self.get_season(), self.get_page())
@@ -86,7 +88,8 @@ class PenaltiesByGameScraper(NHLScraper):
             game_id = row[0] + '_' + away_team + '_' + home_team
 
             row = tuple([game_id, str(self.get_season())] + row)
-            print row
+            if self.is_verbose():
+                print row
 
             data.append(row)
 
