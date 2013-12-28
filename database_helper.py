@@ -3,6 +3,7 @@ database_helper.py
 Author: Brian Boates
 """
 import sys
+sys.dont_write_bytecode = True
 import MySQLdb as mdb
 
 class DatabaseHelper(object):
@@ -17,6 +18,14 @@ class DatabaseHelper(object):
         except:
             print 'Problem establishing MySQL connection - exiting...'
             sys.exit(1)
+
+    def __str__(self):
+        s  = '<DatabaseHelper: '
+        s += 'database_name=%s>' % self.get_database_name()
+        return s
+
+    def __repr__(self):
+        return self.__str__()
 
     def get_database_name(self):
         return self._database_name
@@ -48,8 +57,6 @@ class DatabaseHelper(object):
 
 def main():
     database_helper = DatabaseHelper()
-#    database_helper.drop_database()
-#    database_helper.create_database()
 
 
 if __name__ == '__main__':
